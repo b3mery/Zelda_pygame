@@ -41,7 +41,7 @@ class Player(pygame.sprite.Sprite):
         # Check vector length and normalize
         if self.direction.magnitude() != 0:
             self.direction = self.direction.normalize()
-        # self.rect.center += self.direction * speed
+
         self.rect.x += self.direction.x * speed
         self.check_collisions('horizontal')
         self.rect.y += self.direction.y * speed
