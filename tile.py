@@ -10,10 +10,21 @@ class Tile(pygame.sprite.Sprite):
         super().__init__(groups)
         self.sprite_type = sprite_type
         self.image = surface
-        if sprite_type == 'object':
-            # Adjust y position
-            y = pos[1] - settings.TILESIZE
-            self.rect = self.image.get_rect(topleft = (pos[0], y))
-        else:    
+        self.__place_sprite(pos)
+            
+    def __place_sprite(self,pos):
+        """* Adjust the postion of specifc sprite types,
+        * place sprite at pos
+        * Adjust hitbox of spite
+
+        Args:
+            pos (tuple): (x, y) x and y positions
+        """
+        if self.sprite_type == 'object':
+            # Objects are double tilesize, adjust Y for placement
+            self.rect = self.image.get_rect(topleft = (pos[0],  pos[1] - settings.TILESIZE))
+            # Reduce y hitbox of Object by half its size to give illusion of walking behind
+            self.hitbox = self.rect.inflate(0,-settings.TILESIZE)
+        else:
             self.rect = self.image.get_rect(topleft = pos)
-        self.hitbox = self.rect.inflate(0,-10)
+            self.hitbox = self.rect.inflate(0,-10)

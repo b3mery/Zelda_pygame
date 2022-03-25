@@ -108,7 +108,7 @@ class Player(pygame.sprite.Sprite):
                     self.status = self.status.replace('_idle', '_attack') 
                 else:
                     self.status = self.status + '_attack'
-        else: 
+        else:
             if 'attack' in self.status:
                 self.status = self.status.replace('_attack', '')
 
