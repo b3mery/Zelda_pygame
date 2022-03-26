@@ -17,18 +17,21 @@ class UI:
 
         # Weapon Graphics
         self.weapon_graphics = []
-        self.__build_weapon_graphics()
+        self.magic_graphics = []
+        self.__build_graphics_from_data_dict(settings.weapon_data, self.weapon_graphics)
+        self.__build_graphics_from_data_dict(settings.magic_data, self.magic_graphics)
 
-    def __build_weapon_graphics(self):
+
+    def __build_graphics_from_data_dict(self, data:dict, append_to_list:list):
         """* Selects weapon graphic pass from weapons data dict.
         * Insanities a pygame.image from the path
         * stores image in self.weapon_graphics list
         
         """
-        for weapon in settings.weapon_data.values():
-            path = weapon['graphic']
+        for item in data.values():
+            path = item['graphic']
             img = pygame.image.load(path).convert_alpha()
-            self.weapon_graphics.append(img)
+            append_to_list.append(img)
 
     def __show_bar(self, cur_amount, max_amount, bg_rect:pygame.Rect, color):
         """Draw a Rect Bar to display stats
@@ -93,19 +96,22 @@ class UI:
         else:
             pygame.draw.rect(self.display_surface, settings.UI_BORDER_COLOR, bg_rect, 3)
         return bg_rect
-
-    def __weapon_overlay(self, weapon_index:int, has_switched:bool):
-        """Draw current selected weapon to the Game Screen
+    
+    def __item_overlay(self, left:int, top:int, item_index:int, item_graphics:list ,has_switched:bool):
+        """Draw the current item to the game screen
 
         Args:
-            weapon_index (int): Selected Weapon Index
-            has_switched (bool): If the user has just switched weapons
+            left (int): left position
+            top (int): top position
+            item_index (int): Current selected item index
+            item_graphics (list): Item Graphic List
+            has_switched (bool): Can Player Switch Itesm
         """
-        bg_rect = self.__selection_box(10, 630, has_switched)
-        weapon_surf = self.weapon_graphics[weapon_index]
-        weapon_rect = weapon_surf.get_rect(center = bg_rect.center)
-        self.display_surface.blit(weapon_surf, weapon_rect)
-    
+        bg_rect = self.__selection_box(left,top, has_switched)
+        surf = item_graphics[item_index]
+        rect = surf.get_rect(center = bg_rect.center)
+        self.display_surface.blit(surf, rect)
+
     def display(self, player:Player):
         """Draw UI Items to the Game Screen
 
@@ -115,5 +121,7 @@ class UI:
         self.__show_bar(player.health,player.stats['health'],self.health_bar_rect, settings.HEALTH_COLOR)
         self.__show_bar(player.energy,player.stats['energy'],self.energy_bar_rect, settings.ENERGY_COLOR)
         self.__show_exp(player.exp)
-        self.__weapon_overlay(player.weapon_index, not player.can_switch_weapon)
-        self.__selection_box(80, 630, False) # Magic
+        # Weapon Overlay 
+        self.__item_overlay(10,630, player.weapon_index,self.weapon_graphics,not player.can_switch_weapon)
+        # Magic Overlay
+        self.__item_overlay(90,630, player.magic_index,self.magic_graphics,not player.can_switch_magic)
