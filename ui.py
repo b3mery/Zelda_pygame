@@ -23,10 +23,13 @@ class UI:
 
 
     def __build_graphics_from_data_dict(self, data:dict, append_to_list:list):
-        """* Selects weapon graphic pass from weapons data dict.
+        """* Selects item graphic path from item data dict.
         * Insanities a pygame.image from the path
-        * stores image in self.weapon_graphics list
-        
+        * stores image in append to list
+
+        Args:
+            data (dict): The item data dictionary from the settings file
+            append_to_list (list): list to append graphics file path to
         """
         for item in data.values():
             path = item['graphic']
