@@ -1,3 +1,4 @@
+from pyclbr import Function
 from numpy import character
 import pygame
 from debug import debug 
@@ -9,7 +10,7 @@ class Player(pygame.sprite.Sprite):
 
     Extends: pygame (pygame.sprite.Sprite)
     """
-    def __init__(self,pos,groups, obstacle_sprites:pygame.sprite.Group):
+    def __init__(self, pos:tuple, groups:list, obstacle_sprites:pygame.sprite.Group, create_attack:Function, destroy_attack:Function):
         super().__init__(groups)
         self.image = pygame.image.load('assets/graphics/test/player.png').convert_alpha()
         self.rect = self.image.get_rect(topleft = pos)
@@ -27,6 +28,12 @@ class Player(pygame.sprite.Sprite):
         self.is_attacking = False
         self.attack_cooldown = 400
         self.attack_time = None
+
+        # Weapons
+        self.weapon_index = 0
+        self.weapon = list(settings.weapon_data.keys())[self.weapon_index]
+        self.create_attack = create_attack
+        self.destroy_attack = destroy_attack
         
         self.obstacle_sprites = obstacle_sprites
 
@@ -85,12 +92,13 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_SPACE]:
             self.is_attacking = True
             self. attack_time = pygame.time.get_ticks()
+            self.create_attack()
 
         # Magic Input
         if keys[pygame.K_LCTRL]:
             self.is_attacking = True
             self. attack_time = pygame.time.get_ticks()
-            print('Magic')
+            # self.create_attack()
 
     def get_status(self):
         """Calculate the player.status based on direction and attacking
@@ -162,6 +170,7 @@ class Player(pygame.sprite.Sprite):
         current_time = pygame.time.get_ticks()
         if (self.is_attacking and current_time - self.attack_time >= self.attack_cooldown ):
             self.is_attacking = False
+            self.destroy_attack()
 
     def animate(self):
         """_summary_
@@ -183,6 +192,4 @@ class Player(pygame.sprite.Sprite):
         self.get_status()
         self.animate()
         self.cooldowns()
-        self.move(self.speed)
-        debug(self.status)
-    
+        self.move(self.speed)    
