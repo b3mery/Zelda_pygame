@@ -39,6 +39,11 @@ class Enemy(Entity):
         self.notice_radius = monster_info['notice_radius']
         self.attack_type = monster_info['attack_type']
 
+        # Player Interaction
+        self.can_attack = True
+        self.attack_cooldown = 800
+        self.attack_time = None
+
     def __import_graphics(self, monster_name):
         self.animations = {'idle': [], 'move': [], 'attack': [] }
         main_path = f'assets/graphics/monsters/{monster_name}/'
@@ -77,7 +82,7 @@ class Enemy(Entity):
         """
         distance = self.__get_player_distance_direction(player)[0]
 
-        if distance <= self.attack_radius:
+        if distance <= self.attack_radius and self.can_attack:
             self.status = 'attack'
         elif distance <= self.notice_radius:
             self.status = 'move'
@@ -91,7 +96,10 @@ class Enemy(Entity):
             player (Player): Insanitated Player object
         """
         if self.status == 'attack':
-            print('attack')
+            if self.status != 'attack':
+                # Reset anamation 
+                self.frame_index = 0
+            self.attack_time = pygame.time.get_ticks()
         if self.status == 'move':
             self.direction = self.__get_player_distance_direction(player)[1]
         else:
@@ -103,15 +111,26 @@ class Enemy(Entity):
         anamation = self.animations[self.status]
         self.frame_index += self.anamation_speed
         if self.frame_index >= len(anamation):
+            # play the full  
+            if self.status == 'attack':
+                self.can_attack = False
             self.frame_index = 0
 
         # set the image
         self.image = anamation[int(self.frame_index)]
         self.rect = self.image.get_rect(center = self.hitbox.center)
     
+    def cooldown(self):
+        current_time = pygame.time.get_ticks()
+        
+        # Attack Cool Down
+        if (not self.can_attack and current_time - self.attack_time >= self.attack_cooldown ):
+            self.can_attack = True
+
     def update(self) -> None:
         self.move(self.speed)
         self.animate()
+        self.cooldown()
 
     def enemy_update(self, player:Player) -> None:
         """_summary_
