@@ -48,6 +48,13 @@ magic_data = {
 ####################################### Enemies #########################################################################
 
 # enemy
+monster_id_mapping = {
+    '390': 'bamboo',
+    '391': 'spirit',
+    '392': 'raccoon',
+    '393' : 'squid'
+}
+
 monster_data = {
     'squid': {'health': 100,'exp':100,'damage':20,'attack_type': 'slash', 'attack_sound':'assets/audio/attack/slash.wav', 'speed': 3, 'resistance': 3, 'attack_radius': 80, 'notice_radius': 360},
     'raccoon': {'health': 300,'exp':250,'damage':40,'attack_type': 'claw',  'attack_sound':'assets/audio/attack/claw.wav','speed': 2, 'resistance': 3, 'attack_radius': 120, 'notice_radius': 400},

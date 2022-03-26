@@ -1,5 +1,6 @@
 import pygame
 import random
+from enemy import Enemy
 
 import settings
 import utils
@@ -35,7 +36,8 @@ class Level:
         layouts = {
             'boundary': utils.import_csv_layout("assets/map/map_FloorBlocks.csv"),
             'grass': utils.import_csv_layout("assets/map/map_Grass.csv"),
-            'object': utils.import_csv_layout("assets/map/map_Objects.csv")
+            'object': utils.import_csv_layout("assets/map/map_Objects.csv"),
+            'entities': utils.import_csv_layout("assets/map/map_Entities.csv"),
         }
         graphics = {
             'grass': utils.import_folder("assets/graphics/Grass"),
@@ -59,15 +61,23 @@ class Level:
                             # Select the object graphics at the corresponding index
                             surf = graphics['objects'][int(col)]
                             Tile((x,y),[self.visible_sprites, self.obstacle_sprites],'object', surf)
+                        
+                        if style == 'entities':
+                            if col == "394": # player 
+                                self.player = Player(
+                                        (x,y),
+                                        [self.visible_sprites],
+                                        self.obstacle_sprites,
+                                        self.create_attack,
+                                        self.destroy_attack,
+                                        self.create_magic
+                                    )
+                            else:
+                                monster_name = settings.monster_id_mapping.get(col)
+                                if monster_name is not None:
+                                    Enemy(monster_name, (x,y), [self.visible_sprites] )
                             
-        self.player = Player(
-            (1000,1430),
-            [self.visible_sprites],
-            self.obstacle_sprites,
-            self.create_attack,
-            self.destroy_attack,
-            self.create_magic
-        )
+
 
     def create_attack(self):
         """Create the Attack
