@@ -35,6 +35,10 @@ class Player(pygame.sprite.Sprite):
         self.create_attack = create_attack
         self.destroy_attack = destroy_attack
         
+        self.can_switch_weapon = True
+        self.weapon_switch_time = None
+        self.switch_duration_cooldown = 200
+
         self.obstacle_sprites = obstacle_sprites
 
     def import_player_assets(self):
@@ -99,6 +103,18 @@ class Player(pygame.sprite.Sprite):
             self.is_attacking = True
             self. attack_time = pygame.time.get_ticks()
             # self.create_attack()
+        
+        if keys[pygame.K_q] and self.can_switch_weapon:
+            # q to change weapon
+            self.can_switch_weapon = False
+            self.weapon_switch_time = pygame.time.get_ticks()
+            self.weapon_index += 1
+            # Reset index for out of range
+            if self.weapon_index > len(settings.weapon_data.keys()) - 1:
+                self.weapon_index = 0
+            
+            self.weapon = list(settings.weapon_data.keys())[self.weapon_index]
+
 
     def get_status(self):
         """Calculate the player.status based on direction and attacking
@@ -168,9 +184,15 @@ class Player(pygame.sprite.Sprite):
         """_summary_
         """
         current_time = pygame.time.get_ticks()
+        
+        # Player Attack Cool Down
         if (self.is_attacking and current_time - self.attack_time >= self.attack_cooldown ):
             self.is_attacking = False
             self.destroy_attack()
+
+        # Swith Weapons cool down
+        if (not self.can_switch_weapon and current_time - self.weapon_switch_time >= self.switch_duration_cooldown ):
+            self.can_switch_weapon = True
 
     def animate(self):
         """_summary_
