@@ -202,7 +202,7 @@ class Player(Entity):
             self.can_switch_magic = True
 
     def animate(self):
-        """_summary_
+        """Animate the Game Object
         """
         anamation = self.animations[self.status]
         self.frame_index += self.anamation_speed

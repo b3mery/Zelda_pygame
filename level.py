@@ -75,7 +75,7 @@ class Level:
                             else:
                                 monster_name = settings.monster_id_mapping.get(col)
                                 if monster_name is not None:
-                                    Enemy(monster_name, (x,y), [self.visible_sprites] )
+                                    Enemy(monster_name, (x,y), [self.visible_sprites], self.obstacle_sprites)
                             
 
 
@@ -102,5 +102,6 @@ class Level:
         # self.visible_sprites.draw(self.display_surface)
         self.visible_sprites.custom_draw(self.player)
         self.visible_sprites.update()
+        self.visible_sprites.enemy_update(self.player)
         self.ui.display(self.player)
 
