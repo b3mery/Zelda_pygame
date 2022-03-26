@@ -99,12 +99,23 @@ class Player(Entity):
             folder_path = f"{character_path}/{animation_state}"
             self.animations[animation_state] = utils.import_folder(folder_path)
 
-    def input(self):
-        """Monitor for keyboard input"""
+    def __check_for_input(self):
+        """Check for keyboard input"""
         if self.is_attacking:
             return None
-        keys = pygame.key.get_pressed()
+        self.__movement_input()
+        self.__attack_input()
+        self.__magic_input()
+        self.__switch_weapon_input()
+        self.__switch_magic_input()
 
+
+    def __movement_input(self):
+        """* Check for keyboard movement input.
+        * Update direction
+        * Update Status
+        """
+        keys = pygame.key.get_pressed()
         # Vertical Inputs
         if keys[pygame.K_UP]:
             self.direction.y = -1
@@ -124,22 +135,26 @@ class Player(Entity):
             self.status = 'left'
         else:
             self.direction.x = 0
-    
+
+    def __attack_input(self):
+        """* Check for attack keyboard inputs
+        * Update is_attacking
+        * create_attack
+        """
+        keys = pygame.key.get_pressed()
         # Attack Input:
         if keys[pygame.K_SPACE]:
             self.is_attacking = True
             self.attack_time = pygame.time.get_ticks()
             self.create_attack()
-
-        # Magic Input
-        if keys[pygame.K_LCTRL]:
-            self.is_attacking = True
-            self.attack_time = pygame.time.get_ticks()
-            style = list(settings.magic_data.keys())[self.magic_index]
-            strength = list(settings.magic_data.values())[self.magic_index]['strength'] + self.stats['magic']
-            cost = list(settings.magic_data.values())[self.magic_index]['cost']
-            self.create_magic(style, strength, cost)
-            
+    
+    def __switch_weapon_input(self):
+        """* Check for switch weapon input
+        * Check if can switch
+        * Update can_switch
+        * Update weapon_index
+        """
+        keys = pygame.key.get_pressed()
         # Switch Weapon        
         if keys[pygame.K_q] and self.can_switch_weapon:
             # q to change weapon
@@ -149,8 +164,30 @@ class Player(Entity):
             # Reset index for out of range
             if self.weapon_index > len(settings.weapon_data.keys()) - 1:
                 self.weapon_index = 0
-            
             self.weapon = list(settings.weapon_data.keys())[self.weapon_index]
+    
+    def __magic_input(self):
+        """* Check for magic keyboard inputs
+        * Update is_attacking
+        * create_magic
+        """
+        keys = pygame.key.get_pressed()
+        # Magic Input
+        if keys[pygame.K_LCTRL]:
+            self.is_attacking = True
+            self.attack_time = pygame.time.get_ticks()
+            style = list(settings.magic_data.keys())[self.magic_index]
+            strength = list(settings.magic_data.values())[self.magic_index]['strength'] + self.stats['magic']
+            cost = list(settings.magic_data.values())[self.magic_index]['cost']
+            self.create_magic(style, strength, cost)
+    
+    def __switch_magic_input(self):
+        """* Check for switch magic input
+        * Check if can switch
+        * Update can_switch
+        * Update magic_index
+        """       
+        keys = pygame.key.get_pressed()
         # Switch Magic
         if keys[pygame.K_e] and self.can_switch_magic:
             # e to change magic
@@ -160,10 +197,9 @@ class Player(Entity):
             # Reset index for out of range
             if self.magic_index > len(settings.magic_data.keys()) - 1:
                 self.magic_index = 0
-            
             self.magic = list(settings.magic_data.keys())[self.magic_index]
 
-    def get_status(self):
+    def __set_status(self):
         """Calculate the player.status based on direction and attacking
         """
         # idle status:
@@ -183,7 +219,7 @@ class Player(Entity):
             if 'attack' in self.status:
                 self.status = self.status.replace('_attack', '')
 
-    def cooldowns(self):
+    def __cooldowns(self):
         """_summary_
         """
         current_time = pygame.time.get_ticks()
@@ -201,7 +237,7 @@ class Player(Entity):
         if (not self.can_switch_magic and current_time - self.magic_switch_time >= self.switch_duration_cooldown ):
             self.can_switch_magic = True
 
-    def animate(self):
+    def __animate(self):
         """Animate the Game Object
         """
         anamation = self.animations[self.status]
@@ -217,8 +253,8 @@ class Player(Entity):
     def update(self):
         """Update the game screen
         """
-        self.input()
-        self.get_status()
-        self.animate()
-        self.cooldowns()
+        self.__check_for_input()
+        self.__set_status()
+        self.__animate()
+        self.__cooldowns()
         self.move(self.speed)    
