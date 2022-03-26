@@ -1,6 +1,6 @@
 from tkinter import CENTER
 import pygame
-from player import Player
+from src.game_objects.player import Player
 
 class Weapon(pygame.sprite.Sprite):
     """_summary_

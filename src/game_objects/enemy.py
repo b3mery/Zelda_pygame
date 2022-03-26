@@ -1,9 +1,9 @@
 import pygame
 
-import settings 
-import utils
-from player import Player
-from entity import Entity
+from src.utils import settings 
+from src.utils import util
+from src.game_objects.player import Player
+from src.game_objects.base.entity import Entity
 
 
 class Enemy(Entity):
@@ -48,7 +48,7 @@ class Enemy(Entity):
         self.animations = {'idle': [], 'move': [], 'attack': [] }
         main_path = f'assets/graphics/monsters/{monster_name}/'
         for anamation in self.animations.keys(): 
-            self.animations[anamation] = utils.import_folder(main_path + anamation)
+            self.animations[anamation] = util.import_folder(main_path + anamation)
     
     def __get_player_distance_direction(self,player:Player):
         """Apply vector maths on Enemy Vector and Player Vector to calculate

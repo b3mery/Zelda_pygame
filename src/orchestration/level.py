@@ -1,14 +1,14 @@
 import pygame
 import random
-from enemy import Enemy
+from src.game_objects.enemy import Enemy
 
-import settings
-import utils
-from tile import Tile
-from player import Player
-from weapon import Weapon
-from ui import UI
-from y_sort_camera_group import YSortCameraGroup
+from src.utils import settings
+from src.utils import util
+from src.game_objects.base.tile import Tile
+from src.game_objects.player import Player
+from src.game_objects.base.weapon import Weapon
+from src.orchestration.ui import UI
+from src.orchestration.y_sort_camera_group import YSortCameraGroup
 
 class Level:
     """Level Class - builds and updates game level
@@ -34,14 +34,14 @@ class Level:
         """Create the map loading spties
         """
         layouts = {
-            'boundary': utils.import_csv_layout("assets/map/map_FloorBlocks.csv"),
-            'grass': utils.import_csv_layout("assets/map/map_Grass.csv"),
-            'object': utils.import_csv_layout("assets/map/map_Objects.csv"),
-            'entities': utils.import_csv_layout("assets/map/map_Entities.csv"),
+            'boundary': util.import_csv_layout("assets/map/map_FloorBlocks.csv"),
+            'grass': util.import_csv_layout("assets/map/map_Grass.csv"),
+            'object': util.import_csv_layout("assets/map/map_Objects.csv"),
+            'entities': util.import_csv_layout("assets/map/map_Entities.csv"),
         }
         graphics = {
-            'grass': utils.import_folder("assets/graphics/Grass"),
-            'objects': utils.import_folder("assets/graphics/objects")
+            'grass': util.import_folder("assets/graphics/Grass"),
+            'objects': util.import_folder("assets/graphics/objects")
         }
         for style, layout in layouts.items():
             for row_index, row in enumerate(layout):

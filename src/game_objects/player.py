@@ -1,9 +1,9 @@
 from pyclbr import Function
 import pygame
 
-from entity import Entity 
-import settings
-import utils
+from src.game_objects.base.entity import Entity 
+from src.utils import settings
+from src.utils import util
 
 
 class Player(Entity):
@@ -97,7 +97,7 @@ class Player(Entity):
         } 
         for animation_state in self.animations.keys():
             folder_path = f"{character_path}/{animation_state}"
-            self.animations[animation_state] = utils.import_folder(folder_path)
+            self.animations[animation_state] = util.import_folder(folder_path)
 
     def __check_for_input(self):
         """Check for keyboard input"""

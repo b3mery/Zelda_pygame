@@ -1,6 +1,6 @@
 import pygame, sys
-import settings
-from level import Level
+from src.utils import settings
+from src.orchestration.level import Level
 
 class Game:
     """PyGame Game Class"""
