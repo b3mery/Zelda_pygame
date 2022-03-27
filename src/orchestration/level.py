@@ -14,6 +14,7 @@ from src.game_objects.enemy import Enemy
 from src.animation.animation_player import AnimationPlayer
 from src.game_objects.base.magic import MagicPlayer
 from src.orchestration.ui import UI
+from src.orchestration.upgrade import Upgrade
 from src.orchestration.y_sort_camera_group import YSortCameraGroup
 
 # animation 
@@ -23,6 +24,7 @@ class Level:
     def __init__(self) -> None:
         # get the display surface
         self.display_surface = pygame.display.get_surface()
+        self.game_paused = False
 
         # Sprite group setup
         self.visible_sprites = YSortCameraGroup()
@@ -33,10 +35,12 @@ class Level:
         self.attack_sprites =  pygame.sprite.Group()
         self.attackable_sprites =  pygame.sprite.Group()
         # sprite setup
+        # Creates monsters, tiles and player
         self.create_map()
 
         # User Interface
         self.ui = UI()
+        self.upgrade = Upgrade(self.player)
 
         # particles
         self.anamation_player = AnimationPlayer()
@@ -99,11 +103,10 @@ class Level:
                                         [self.visible_sprites, self.attackable_sprites],
                                         self.obstacle_sprites,
                                         self.damage_player,
-                                        self.trigger_death_particles
+                                        self.trigger_death_particles,
+                                        self.add_xp
                                     )
                             
-
-
     def create_attack(self):
         """Create the Attack
         """
@@ -131,7 +134,7 @@ class Level:
         self.current_attack = None
 
     def player_attack_logic(self):
-        """_summary_
+        """Attack 
         """
         if self.attack_sprites:
             for attack_sprite in self.attack_sprites:
@@ -160,16 +163,32 @@ class Level:
             self.player.hurt_time = pygame.time.get_ticks()
             self.anamation_player.create_particles(attack_type, self.player.rect.center, [self.visible_sprites])
     
-    def trigger_death_particles(self, pos, particle_type):
+    def trigger_death_particles(self, pos:tuple, particle_type:str):
+        """Triggers anamation of death particles
+
+        Args:
+            pos (tuple): (x,y) position
+            particle_type (str): name of particle animation
+        """
         self.anamation_player.create_particles(particle_type, pos, [self.visible_sprites])
+
+    def add_xp(self, amount):
+        self.player.exp += amount
+
+    def toggle_menu(self):
+        self.game_paused = not self.game_paused
+
 
     def run(self):
         """Update and draw the sprites to the game
         """
-        # self.visible_sprites.draw(self.display_surface)
         self.visible_sprites.custom_draw(self.player)
-        self.visible_sprites.update()
-        self.visible_sprites.enemy_update(self.player)
-        self.player_attack_logic()
         self.ui.display(self.player)
+
+        if self.game_paused:
+            self.upgrade.display()
+        else:
+            self.visible_sprites.update()
+            self.visible_sprites.enemy_update(self.player)
+            self.player_attack_logic()
 

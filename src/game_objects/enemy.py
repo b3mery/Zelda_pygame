@@ -13,7 +13,7 @@ class Enemy(Entity):
     Extends:
         Entity (pygame.sprite.Sprite): Base Game Object Class
     """
-    def __init__(self, monster_name:str, pos:tuple, groups, obstacle_sprites, damage_player:Function, trigger_death_particles:Function) -> None:
+    def __init__(self, monster_name:str, pos:tuple, groups, obstacle_sprites, damage_player:Function, trigger_death_particles:Function, add_exp:Function) -> None:
         super().__init__(groups)
         # General Setup
         self.sprite_type = 'enemy'
@@ -44,9 +44,10 @@ class Enemy(Entity):
         self.can_attack = True
         self.attack_cooldown_duration = 800
         self.attack_time = None
-
+        # Player Interaction Functions
         self.damage_player = damage_player
         self.trigger_death_particles = trigger_death_particles
+        self.add_exp = add_exp
 
         # Invincibility
         self.vulnerable = True
@@ -179,7 +180,6 @@ class Enemy(Entity):
                 # magic damage
                 self.health -= player.get_full_magic_damage()
             
-    
     def __hit_reaction(self):
         """Move the enemy back if they have been hit
         """
@@ -193,6 +193,7 @@ class Enemy(Entity):
         if self.health <= 0:
             self.kill()
             self.trigger_death_particles(self.rect.center, self.monster_name)
+            self.add_exp(self.exp)
 
     def update(self) -> None:
         """Extends pygame update, updates the game screen
