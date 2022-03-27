@@ -1,25 +1,31 @@
-from unittest.mock import MagicProxy
 import pygame
 import random
-from src.game_objects.base.magic import MagicPlayer
-
 
 from src.utils import settings
 from src.utils import util
 
 from src.game_objects.base.tile import Tile
-from src.game_objects.base.weapon import Weapon
+from src.game_objects.weapon import Weapon
+from src.game_objects.magic import Magic
 from src.game_objects.player import Player
 from src.game_objects.enemy import Enemy
+
 from src.animation.animation_player import AnimationPlayer
-from src.game_objects.base.magic import MagicPlayer
 from src.user_interface.heads_up_display import HeadsUpDisplay
 from src.user_interface.upgrade_menu import UpgradeMenu
 from src.orchestration.y_sort_camera_group import YSortCameraGroup
 
-# animation 
 class Level:
-    """Level Class - builds and updates game level
+    """* Level Class is essentially the game engine, it is responsible for:
+    * Insanitating game objects:
+            * level map Tile sprites
+            * Player 
+            * Enemy's 
+    * Managing player and monster intergations
+    * Managing player and weapon integrations
+    * Managing different sprite groups
+    * insanitating anamations
+    * Running the main game update loop
     """
     def __init__(self) -> None:
         # get the display surface
@@ -29,26 +35,30 @@ class Level:
         # Sprite group setup
         self.visible_sprites = YSortCameraGroup()
         self.obstacle_sprites = pygame.sprite.Group()
-
         # Attack Sprites
         self.current_attack = None
+
         self.attack_sprites =  pygame.sprite.Group()
         self.attackable_sprites =  pygame.sprite.Group()
         # sprite setup
         # Creates monsters, tiles and player
-        self.create_map()
+        self.__create_level_map()
 
         # User Interface
-        self.ui = HeadsUpDisplay()
-        self.upgrade = UpgradeMenu(self.player)
+        self.heads_up_display = HeadsUpDisplay()
+        self.upgrade_menu = UpgradeMenu(self.player)
 
         # particles
         self.anamation_player = AnimationPlayer()
-        self.magic_player = MagicPlayer(self.anamation_player)
+        self.magic = Magic(self.anamation_player)
 
         
-    def create_map(self):
-        """Create the map loading spties
+    def __create_level_map(self):
+        """* Load the Tile CSV Layouts
+        * load the Tile Graphics
+        * Build the x & y position
+        * Create the Entity Sprites
+        * Create the Tile Sprites (Map objects)
         """
         layouts = {
             'boundary': util.import_csv_layout("assets/map/map_FloorBlocks.csv"),
@@ -67,48 +77,73 @@ class Level:
                         x = col_index * settings.TILESIZE
                         y = row_index * settings.TILESIZE
                         # Build Map Sprites
-                        if style == 'boundary':
-                            Tile((x,y),[self.obstacle_sprites],'invisible')
-                        
-                        if style == 'grass':
-                            rand_grass_img = random.choice(graphics['grass'])
-                            Tile(
-                                (x,y),
-                                [self.visible_sprites, self.obstacle_sprites, self.attackable_sprites],
-                                'grass',
-                                rand_grass_img
-                            )
-                        
-                        if style == 'object':
-                            # Select the object graphics at the corresponding index
-                            surf = graphics['objects'][int(col)]
-                            Tile((x,y),[self.visible_sprites, self.obstacle_sprites],'object', surf)
-                        
                         if style == 'entities':
-                            if col == "394": # player 
-                                self.player = Player(
-                                        (x,y),
-                                        [self.visible_sprites, self.attackable_sprites],
-                                        self.obstacle_sprites,
-                                        self.create_attack,
-                                        self.destroy_attack,
-                                        self.create_magic
-                                    )
-                            else:
-                                monster_name = settings.monster_id_mapping.get(col)
-                                if monster_name is not None:
-                                    Enemy(
-                                        monster_name,
-                                        (x,y),
-                                        [self.visible_sprites, self.attackable_sprites],
-                                        self.obstacle_sprites,
-                                        self.damage_player,
-                                        self.trigger_death_particles,
-                                        self.add_xp
-                                    )
-                            
+                            self.__create_entity_sprites(col,(x,y))
+                        else:                            
+                            self.__create_tile_sprites(style, col, (x,y), graphics)
+                        
+    def __create_tile_sprites(self, style, id, pos:tuple, graphics):
+        """Insanities the Tile object with each different type of sprite in its desired position.
+
+        Args:
+            style (str): 'boundary', 'grass', or 'object'
+            id (str): the sprites allocated id from the csv layout
+            pos (tuple): x and y position 
+            graphics (dict): Dictionary of tile graphics
+        """
+        if style == 'boundary':
+            Tile(pos,[self.obstacle_sprites],'invisible')
+        
+        if style == 'grass':
+            rand_grass_img = random.choice(graphics['grass'])
+            Tile(
+                pos,
+                [self.visible_sprites, self.obstacle_sprites, self.attackable_sprites],
+                'grass',
+                rand_grass_img
+            )
+        
+        if style == 'object':
+            # Select the object graphics at the corresponding index
+            surf = graphics['objects'][int(id)]
+            Tile(pos,[self.visible_sprites, self.obstacle_sprites],'object', surf)
+
+    def __create_entity_sprites(self, id, pos:tuple):
+        """* Create the Player if the id matches it Tile Id
+            * Instantiate the player object
+        * Else Create the monsters
+            * Instantiate the Enemy Object
+
+        Args:
+            id (str): Id form the tiled csv layour
+            pos (tuple): X and Y position
+        """
+        if id == "394": # player 
+            self.player = Player(
+                    pos,
+                    [self.visible_sprites, self.attackable_sprites],
+                    self.obstacle_sprites,
+                    self.create_attack,
+                    self.destroy_attack,
+                    self.create_magic
+                )
+        else:
+            monster_name = settings.monster_id_mapping.get(id)
+            if monster_name is not None:
+                Enemy(
+                    monster_name,
+                    pos,
+                    [self.visible_sprites, self.attackable_sprites],
+                    self.obstacle_sprites,
+                    self.damage_player,
+                    self.trigger_death_particles,
+                    self.add_xp
+                )
+
+
+    ####################################### Player Integration Methods #############################################################                         
     def create_attack(self):
-        """Create the Attack
+        """Instantiate Weapon to current_attack
         """
         self.current_attack = Weapon([self.visible_sprites, self.attack_sprites], self.player)
     
@@ -121,10 +156,10 @@ class Level:
             cost (int): cost of using the spell
         """
         if style == 'heal':
-            self.magic_player.heal(self.player, strength, cost, [self.visible_sprites])
+            self.magic.heal(self.player, strength, cost, [self.visible_sprites])
 
         if style == 'flame':
-            self.magic_player.flame(self.player, cost, [self.visible_sprites, self.attack_sprites])
+            self.magic.flame(self.player, cost, [self.visible_sprites, self.attack_sprites])
         
     def destroy_attack(self):
         """Remove The Attack Graphic
@@ -133,29 +168,44 @@ class Level:
             self.current_attack.kill()
         self.current_attack = None
 
-    def player_attack_logic(self):
-        """Attack 
+    ####################################### Enemy Integration Methods #############################################################                         
+    def __detect_player_attacks(self):
+        """Detect collisions between attack sprites and attackable sprites 
         """
         if self.attack_sprites:
             for attack_sprite in self.attack_sprites:
                 collision_sprites = pygame.sprite.spritecollide(attack_sprite, self.attackable_sprites, False)
                 if collision_sprites:
-                    for target_sprite in collision_sprites:
-                        if target_sprite.sprite_type == 'grass':
-                            pos = target_sprite.rect.center
-                            offest = pygame.math.Vector2(0,50)
-                            for _ in range(random.randint(3,6)):
-                                self.anamation_player.create_grass_particles(pos-offest,[self.visible_sprites])
-                            target_sprite.kill()
-                        elif target_sprite.sprite_type != 'player':
-                            target_sprite.get_damage(self.player, attack_sprite.sprite_type)
-    
-    def damage_player(self, amount, attack_type):
-        """_summary_
+                    self.__damage_collided_attackable_sprites(attack_sprite, collision_sprites)
+
+    def __damage_collided_attackable_sprites(self,attack_sprite, collision_sprites):
+        """* if grass, create grass anamation
+        * else if not player, call get_damage 
 
         Args:
-            amount (_type_): _description_
-            attack_type (_type_): _description_
+            attack_sprite (pygame.sprite.Sprite): Attack sprite
+            collision_sprites (list(pygame.sprite.Sprite)): Sprites collied with Attack Sprite 
+        """
+        for target_sprite in collision_sprites:
+            
+            if target_sprite.sprite_type == 'grass':
+                pos = target_sprite.rect.center
+                offest = pygame.math.Vector2(0,50)
+                for _ in range(random.randint(3,6)):
+                    self.anamation_player.create_grass_particles(pos-offest,[self.visible_sprites])
+                target_sprite.kill()
+            
+            elif target_sprite.sprite_type != 'player':
+                target_sprite.get_damage(self.player, attack_sprite.sprite_type)
+
+    def damage_player(self, amount, attack_type):
+        """Inflict damage on the player
+        * updates player vulnerability, hurt time for damager timer.
+        * calls create_particles for attack type anamation. 
+
+        Args:
+            amount (int or float): amount of damage to inflict
+            attack_type (str): type of attack for particle animation
         """
         if self.player.vulnerable:
             self.player.health -= amount
@@ -173,22 +223,30 @@ class Level:
         self.anamation_player.create_particles(particle_type, pos, [self.visible_sprites])
 
     def add_xp(self, amount):
+        """Increase players experience by an amount
+
+        Args:
+            amount (int or float): amount to increase exp by
+        """
         self.player.exp += amount
 
-    def toggle_menu(self):
+    ####################################### UI Methods #############################################################                         
+    def toggle_upgrade_menu(self):
+        """Pause the game
+        """
         self.game_paused = not self.game_paused
 
-
+    ####################################### Game Loop #############################################################                         
     def run(self):
         """Update and draw the sprites to the game
         """
         self.visible_sprites.custom_draw(self.player)
-        self.ui.display(self.player)
+        self.heads_up_display.display(self.player)
 
         if self.game_paused:
-            self.upgrade.display()
+            self.upgrade_menu.display()
         else:
             self.visible_sprites.update()
             self.visible_sprites.enemy_update(self.player)
-            self.player_attack_logic()
+            self.__detect_player_attacks()
 

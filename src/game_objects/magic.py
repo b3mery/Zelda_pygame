@@ -6,7 +6,7 @@ from src.game_objects.player import Player
 
 from src.utils import settings
 
-class MagicPlayer:
+class Magic:
     """_summary_
     """
     def __init__(self, animation_player:AnimationPlayer) -> None:

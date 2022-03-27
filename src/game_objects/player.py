@@ -5,7 +5,6 @@ from src.game_objects.base.entity import Entity
 from src.utils import settings
 from src.utils import util
 
-
 class Player(Entity):
     """Player Game Object Class
 
