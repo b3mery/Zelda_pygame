@@ -10,6 +10,7 @@ class Weapon(pygame.sprite.Sprite):
     """
     def __init__(self, groups, player:Player) -> None:
         super().__init__(groups)
+        self.sprite_type = 'weapon'
         self.player = player
         self.direction = player.status.split('_')[0]
         self.__get_weapon_graphic()

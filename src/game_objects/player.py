@@ -60,6 +60,10 @@ class Player(Entity):
         self.can_switch_magic = True
         self.magic_switch_time = True
 
+        # Invincibility - Damage timer
+        self.vulnerable = True
+        self.hurt_time = None
+        self.invincibility_cooldown_duration = 500
 
         # Stats
         self.stats = {
@@ -225,7 +229,7 @@ class Player(Entity):
         current_time = pygame.time.get_ticks()
         
         # Player Attack Cool Down
-        if (self.is_attacking and current_time - self.attack_time >= self.attack_cooldown ):
+        if (self.is_attacking and current_time - self.attack_time >= (self.attack_cooldown + settings.weapon_data[self.weapon]['cooldown']) ):
             self.is_attacking = False
             self.destroy_attack()
 
@@ -236,6 +240,10 @@ class Player(Entity):
         # Switch Magic cool down
         if (not self.can_switch_magic and current_time - self.magic_switch_time >= self.switch_duration_cooldown ):
             self.can_switch_magic = True
+
+        # Invincibility
+        if not self.vulnerable and  current_time - self.hurt_time >= self.invincibility_cooldown_duration:
+            self.vulnerable = True
 
     def __animate(self):
         """Animate the Game Object
@@ -249,6 +257,24 @@ class Player(Entity):
         # set the image
         self.image = anamation[int(self.frame_index)]
         self.rect = self.image.get_rect(center = self.hitbox.center)
+
+        # flicker 
+        if not self.vulnerable: 
+            # Flicker 0 -255
+            alpha = self.wave_value()
+            self.image.set_alpha(alpha)
+        else: 
+            self.image.set_alpha(255)
+
+    def get_full_weapon_damage(self):
+        """_summary_
+
+        Returns:
+            _type_: _description_
+        """
+        base_damage  = self.stats['attack']
+        weapon_damage = settings.weapon_data[self.weapon]['damage']
+        return base_damage + weapon_damage
 
     def update(self):
         """Update the game screen

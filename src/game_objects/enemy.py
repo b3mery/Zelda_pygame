@@ -1,3 +1,4 @@
+from pyclbr import Function
 import pygame
 
 from src.utils import settings 
@@ -12,7 +13,7 @@ class Enemy(Entity):
     Args:
         Entity (pygame.sprite.Sprite): _description_
     """
-    def __init__(self, monster_name:str, pos:tuple, groups, obstacle_sprites) -> None:
+    def __init__(self, monster_name:str, pos:tuple, groups, obstacle_sprites, damage_player:Function) -> None:
         super().__init__(groups)
         # General Setup
         self.sprite_type = 'enemy'
@@ -41,8 +42,15 @@ class Enemy(Entity):
 
         # Player Interaction
         self.can_attack = True
-        self.attack_cooldown = 800
+        self.attack_cooldown_duration = 800
         self.attack_time = None
+
+        self.damage_player = damage_player
+
+        # Invincibility
+        self.vulnerable = True
+        self.hit_time = None
+        self.invincibility_cooldown_duration = 300
 
     def __import_graphics(self, monster_name):
         self.animations = {'idle': [], 'move': [], 'attack': [] }
@@ -100,12 +108,14 @@ class Enemy(Entity):
                 # Reset anamation 
                 self.frame_index = 0
             self.attack_time = pygame.time.get_ticks()
+            self.damage_player(self.attack_damage, self.attack_type)
+            
         if self.status == 'move':
             self.direction = self.__get_player_distance_direction(player)[1]
         else:
             self.direction = pygame.math.Vector2()
     
-    def animate(self):
+    def __animate(self):
         """Animate the Game Object
         """
         anamation = self.animations[self.status]
@@ -119,18 +129,72 @@ class Enemy(Entity):
         # set the image
         self.image = anamation[int(self.frame_index)]
         self.rect = self.image.get_rect(center = self.hitbox.center)
+
+        # Flicker 
+        if not self.vulnerable: 
+            # Flicker 0 -255
+            alpha = self.wave_value()
+            self.image.set_alpha(alpha)
+        else: 
+            self.image.set_alpha(255)
     
-    def cooldown(self):
+    def __cooldowns(self):
+        """_summary_
+        """
         current_time = pygame.time.get_ticks()
         
         # Attack Cool Down
-        if (not self.can_attack and current_time - self.attack_time >= self.attack_cooldown ):
+        if (not self.can_attack and current_time - self.attack_time >= self.attack_cooldown_duration ):
             self.can_attack = True
+        
+        # Invinciblity cool down
+        if not self.vulnerable and current_time - self.hit_time >= self.invincibility_cooldown_duration:
+            self.vulnerable = True
+
+    def get_damage(self, player:Player, attack_type):
+        """_summary_
+
+        Args:
+            player (Player): _description_
+            attack_type (_type_): _description_
+        """
+        if self.vulnerable:
+            # Update Direction 
+            self.direction = self.__get_player_distance_direction(player)[1]
+            
+            # Update Timer
+            self.vulnerable = False
+            self.hit_time = pygame.time.get_ticks()
+            
+            # Weapon Attack Types:
+            if attack_type == 'weapon': 
+                self.health -= player.get_full_weapon_damage()
+            else: 
+                # magic damage
+                pass
+            
+    
+    def __hit_reaction(self):
+        """Move the enemy back if they have been hit
+        """
+        if not self.vulnerable:
+            self.direction *=  -self.resistance
+    
+    def __check_death(self):
+        """Check if health is less than or equal to 0,
+        kill sprite
+        """
+        if self.health <= 0:
+            self.kill()
 
     def update(self) -> None:
+        """_summary_
+        """
+        self.__hit_reaction()
         self.move(self.speed)
-        self.animate()
-        self.cooldown()
+        self.__animate()
+        self.__cooldowns()
+        self.__check_death()
 
     def enemy_update(self, player:Player) -> None:
         """_summary_

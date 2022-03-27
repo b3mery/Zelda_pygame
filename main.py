@@ -3,7 +3,7 @@ from src.utils import settings
 from src.orchestration.level import Level
 
 class Game:
-    """PyGame Game Class"""
+    """Game Class"""
     def __init__(self) -> None:
         # General Setup
         pygame.init()
@@ -29,3 +29,4 @@ class Game:
 if __name__ == '__main__':
     game = Game()
     game.run()
+    

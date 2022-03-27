@@ -23,7 +23,8 @@ class Level:
 
         # Attack Sprites
         self.current_attack = None
-
+        self.attack_sprites =  pygame.sprite.Group()
+        self.attackable_sprites =  pygame.sprite.Group()
         # sprite setup
         self.create_map()
 
@@ -55,7 +56,12 @@ class Level:
                         
                         if style == 'grass':
                             rand_grass_img = random.choice(graphics['grass'])
-                            Tile((x,y),[self.visible_sprites, self.obstacle_sprites],'grass', rand_grass_img)
+                            Tile(
+                                (x,y),
+                                [self.visible_sprites, self.obstacle_sprites, self.attackable_sprites],
+                                'grass',
+                                rand_grass_img
+                            )
                         
                         if style == 'object':
                             # Select the object graphics at the corresponding index
@@ -66,7 +72,7 @@ class Level:
                             if col == "394": # player 
                                 self.player = Player(
                                         (x,y),
-                                        [self.visible_sprites],
+                                        [self.visible_sprites, self.attackable_sprites],
                                         self.obstacle_sprites,
                                         self.create_attack,
                                         self.destroy_attack,
@@ -75,15 +81,33 @@ class Level:
                             else:
                                 monster_name = settings.monster_id_mapping.get(col)
                                 if monster_name is not None:
-                                    Enemy(monster_name, (x,y), [self.visible_sprites], self.obstacle_sprites)
+                                    Enemy(
+                                        monster_name,
+                                        (x,y),
+                                        [self.visible_sprites, self.attackable_sprites],
+                                        self.obstacle_sprites,
+                                        self.damage_player
+                                    )
                             
 
 
     def create_attack(self):
         """Create the Attack
         """
-        self.current_attack = Weapon([self.visible_sprites], self.player)
+        self.current_attack = Weapon([self.visible_sprites, self.attack_sprites], self.player)
     
+    def create_magic(self, style, strength, cost):
+        """_summary_
+
+        Args:
+            style (_type_): _description_
+            strength (_type_): _description_
+            cost (_type_): _description_
+        """
+        print(style)
+        print(cost)
+        print(strength)
+
     def destroy_attack(self):
         """Remove The Attack Graphic
         """
@@ -91,10 +115,25 @@ class Level:
             self.current_attack.kill()
         self.current_attack = None
 
-    def create_magic(self, style, strength, cost):
-        print(style)
-        print(cost)
-        print(strength)
+    def player_attack_logic(self):
+        """_summary_
+        """
+        if self.attack_sprites:
+            for attack_sprite in self.attack_sprites:
+                collision_sprites = pygame.sprite.spritecollide(attack_sprite, self.attackable_sprites, False)
+                if collision_sprites:
+                    for target_sprite in collision_sprites:
+                        if target_sprite.sprite_type == 'grass':
+                            target_sprite.kill()
+                        else:
+                            target_sprite.get_damage(self.player, attack_sprite.sprite_type)
+    
+    def damage_player(self, amount, attack_type):
+        if self.player.vulnerable:
+            self.player.health -= amount
+            self.player.vulnerable = False
+            self.player.hurt_time = pygame.time.get_ticks()
+
 
     def run(self):
         """Update and draw the sprites to the game
@@ -103,5 +142,6 @@ class Level:
         self.visible_sprites.custom_draw(self.player)
         self.visible_sprites.update()
         self.visible_sprites.enemy_update(self.player)
+        self.player_attack_logic()
         self.ui.display(self.player)
 
