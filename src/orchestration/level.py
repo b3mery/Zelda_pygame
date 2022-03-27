@@ -132,7 +132,9 @@ class Level:
                     for target_sprite in collision_sprites:
                         if target_sprite.sprite_type == 'grass':
                             pos = target_sprite.rect.center
-                            self.anamation_player.create_grass_particles(pos,[self.visible_sprites])
+                            offest = pygame.math.Vector2(0,50)
+                            for _ in range(random.randint(3,6)):
+                                self.anamation_player.create_grass_particles(pos-offest,[self.visible_sprites])
                             target_sprite.kill()
                         else:
                             target_sprite.get_damage(self.player, attack_sprite.sprite_type)
@@ -142,7 +144,7 @@ class Level:
             self.player.health -= amount
             self.player.vulnerable = False
             self.player.hurt_time = pygame.time.get_ticks()
-
+            self.anamation_player.generate_particles(attack_type, self.player.rect.center, [self.visible_sprites])
 
     def run(self):
         """Update and draw the sprites to the game
