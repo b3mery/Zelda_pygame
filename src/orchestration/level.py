@@ -1,7 +1,7 @@
 from unittest.mock import MagicProxy
 import pygame
 import random
-from src.animation.magic_player import MagicPlayer
+from src.game_objects.base.magic_player import MagicPlayer
 
 
 from src.utils import settings
@@ -12,7 +12,7 @@ from src.game_objects.base.weapon import Weapon
 from src.game_objects.player import Player
 from src.game_objects.enemy import Enemy
 from src.animation.animation_player import AnimationPlayer
-from src.animation.magic_player import MagicPlayer
+from src.game_objects.base.magic_player import MagicPlayer
 from src.orchestration.ui import UI
 from src.orchestration.y_sort_camera_group import YSortCameraGroup
 
@@ -40,6 +40,7 @@ class Level:
 
         # particles
         self.anamation_player = AnimationPlayer()
+        self.magic_player = MagicPlayer(self.anamation_player)
 
         
     def create_map(self):
@@ -116,8 +117,12 @@ class Level:
             strength (_type_): _description_
             cost (_type_): _description_
         """
-        print(style)
-        print(cost)
+        if style == 'heal':
+            self.magic_player.heal(self.player, strength, cost, [self.visible_sprites])
+
+        if style == 'flame':
+            pass
+        
         print(strength)
 
     def destroy_attack(self):
@@ -155,10 +160,10 @@ class Level:
             self.player.health -= amount
             self.player.vulnerable = False
             self.player.hurt_time = pygame.time.get_ticks()
-            self.anamation_player.generate_particles(attack_type, self.player.rect.center, [self.visible_sprites])
+            self.anamation_player.create_particles(attack_type, self.player.rect.center, [self.visible_sprites])
     
     def trigger_death_particles(self, pos, particle_type):
-        self.anamation_player.generate_particles(particle_type, pos, [self.visible_sprites])
+        self.anamation_player.create_particles(particle_type, pos, [self.visible_sprites])
 
     def run(self):
         """Update and draw the sprites to the game

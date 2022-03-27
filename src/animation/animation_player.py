@@ -65,7 +65,7 @@ class AnimationPlayer:
 		animation_frames = random.choice(self.frames['leaf'])
 		ParticleEffect(pos, animation_frames, groups)
 
-	def generate_particles(self,animation_type:str, pos, groups):
+	def create_particles(self,animation_type:str, pos, groups):
 		"""_summary_
 
 		Args:

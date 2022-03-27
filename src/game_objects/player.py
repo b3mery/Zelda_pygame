@@ -276,6 +276,17 @@ class Player(Entity):
         weapon_damage = settings.weapon_data[self.weapon]['damage']
         return base_damage + weapon_damage
 
+    def __energy_recovery(self):
+        """_summary_
+        """
+        max_energy = self.stats['energy']
+        if self.energy < max_energy:
+            # Recovery energy * magic stats
+            self.energy += 0.01 * self.stats['magic']
+            if self.energy > max_energy:
+                self.energy = max_energy
+        
+
     def update(self):
         """Update the game screen
         """
@@ -283,4 +294,5 @@ class Player(Entity):
         self.__set_status()
         self.__animate()
         self.__cooldowns()
-        self.move(self.speed)    
+        self.move(self.speed)
+        self.__energy_recovery()    
