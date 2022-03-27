@@ -2,7 +2,7 @@ import pygame
 import random
 
 from src.utils import util
-from src.anamation.particle_effect import ParticleEffect
+from src.animation.particle_effect import ParticleEffect
 
 class AnimationPlayer:
 	"""_summary_

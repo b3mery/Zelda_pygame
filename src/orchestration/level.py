@@ -1,5 +1,7 @@
+from unittest.mock import MagicProxy
 import pygame
 import random
+from src.animation.magic_player import MagicPlayer
 
 
 from src.utils import settings
@@ -9,10 +11,12 @@ from src.game_objects.base.tile import Tile
 from src.game_objects.base.weapon import Weapon
 from src.game_objects.player import Player
 from src.game_objects.enemy import Enemy
-from src.anamation.animation_player import AnimationPlayer
+from src.animation.animation_player import AnimationPlayer
+from src.animation.magic_player import MagicPlayer
 from src.orchestration.ui import UI
 from src.orchestration.y_sort_camera_group import YSortCameraGroup
 
+# animation 
 class Level:
     """Level Class - builds and updates game level
     """
