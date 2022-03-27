@@ -61,10 +61,13 @@ class Player(Entity):
         self.can_switch_magic = True
         self.magic_switch_time = True
 
-        # Invincibility - Damage timer
+        # Damage timer
         self.vulnerable = True
         self.hurt_time = None
         self.vulnerability_cooldown_duration = 500
+
+        self.weapon_attack_sound = pygame.mixer.Sound('assets/audio/sword.wav')
+        self.weapon_attack_sound.set_volume(0.40)
 
         # Stats
         self.stats = {
@@ -166,6 +169,7 @@ class Player(Entity):
             self.is_attacking = True
             self.attack_time = pygame.time.get_ticks()
             self.create_attack()
+            self.weapon_attack_sound.play()
     
     def __switch_weapon_input(self):
         """* Check for switch weapon input

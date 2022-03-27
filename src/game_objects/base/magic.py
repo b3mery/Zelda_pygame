@@ -11,6 +11,10 @@ class MagicPlayer:
     """
     def __init__(self, animation_player:AnimationPlayer) -> None:
         self.animation_player = animation_player
+        self.sounds ={
+            'heal': pygame.mixer.Sound('assets/audio/heal.wav'),
+            'flame': pygame.mixer.Sound('assets/audio/flame.wav')
+        }
 
 
     def heal(self,player:Player, strength:int, cost:int, groups:list):
@@ -29,6 +33,7 @@ class MagicPlayer:
         """
         player_max_health = player.stats['health']
         if player.energy >= cost and player.health < player_max_health: 
+            self.sounds['heal'].play()
             player.health += strength
             player.energy -= cost
             # if health has gone over max, set to max
@@ -53,7 +58,7 @@ class MagicPlayer:
         """
         if player.energy >= cost:
             player.energy -= cost
-
+            self.sounds['flame'].play()
             direction = self.__get_direction(player.status.split('_')[0])
 
             for i in range(1,6):

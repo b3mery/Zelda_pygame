@@ -53,6 +53,13 @@ class Enemy(Entity):
         self.vulnerable = True
         self.hurt_time = None
         self.vulnerability_cooldown_duration = 300
+        # sounds
+        self.hit_sound = pygame.mixer.Sound('assets/audio/hit.wav')
+        self.death_sound = pygame.mixer.Sound('assets/audio/death.wav')
+        self.attack_sound = pygame.mixer.Sound(monster_info['attack_sound'])
+        self.death_sound.set_volume(0.2)
+        self.hit_sound.set_volume(0.2)
+        self.attack_sound.set_volume(0.3)
 
     def __import_graphics(self, monster_name):
         """Import the monster graphics from the monsters folder
@@ -111,12 +118,13 @@ class Enemy(Entity):
             player (Player): Insanitated Player object
         """
         if self.status == 'attack':
-            if self.status != 'attack':
+            # if self.status != 'attack':
                 # Reset anamation 
-                self.frame_index = 0
+                # self.frame_index = 0
             self.attack_time = pygame.time.get_ticks()
             self.damage_player(self.attack_damage, self.attack_type)
-            
+            self.attack_sound.play()
+
         if self.status == 'move':
             self.direction = self.__get_player_distance_direction(player)[1]
         else:
@@ -166,6 +174,7 @@ class Enemy(Entity):
             attack_type (str): 'weapon' or 'magic'
         """
         if self.vulnerable:
+            self.hit_sound.play()
             # Update Direction 
             self.direction = self.__get_player_distance_direction(player)[1]
             
@@ -194,6 +203,7 @@ class Enemy(Entity):
             self.kill()
             self.trigger_death_particles(self.rect.center, self.monster_name)
             self.add_exp(self.exp)
+            self.death_sound.play()
 
     def update(self) -> None:
         """Extends pygame update, updates the game screen
