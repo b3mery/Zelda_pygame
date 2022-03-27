@@ -64,7 +64,7 @@ class Player(Entity):
         # Invincibility - Damage timer
         self.vulnerable = True
         self.hurt_time = None
-        self.invincibility_cooldown_duration = 500
+        self.vulnerability_cooldown_duration = 500
 
         # Stats
         self.stats = {
@@ -243,7 +243,7 @@ class Player(Entity):
             self.can_switch_magic = True
 
         # Invincibility
-        if not self.vulnerable and  current_time - self.hurt_time >= self.invincibility_cooldown_duration:
+        if not self.vulnerable and  current_time - self.hurt_time >= self.vulnerability_cooldown_duration:
             self.vulnerable = True
 
     def __animate(self):
@@ -296,7 +296,7 @@ class Player(Entity):
             self.energy += 0.01 * self.stats['magic']
             if self.energy > max_energy:
                 self.energy = max_energy
-        
+    
 
     def update(self):
         """Update the game screen

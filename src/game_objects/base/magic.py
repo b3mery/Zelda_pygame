@@ -14,7 +14,12 @@ class MagicPlayer:
 
 
     def heal(self,player:Player, strength:int, cost:int, groups:list):
-        """_summary_
+        """* If player has enough energy and player health is less than max:
+            * Reduce player energy
+            * increase player health by strength
+                * if health goes beyond max, set at max
+            * Generate aura animation
+            * Generate health animation
 
         Args:
             player (Player): _description_
@@ -23,7 +28,7 @@ class MagicPlayer:
             groups (list): _description_
         """
         player_max_health = player.stats['health']
-        if player.energy >= cost: #and player.health < player_max_health: 
+        if player.energy >= cost and player.health < player_max_health: 
             player.health += strength
             player.energy -= cost
             # if health has gone over max, set to max
@@ -35,15 +40,16 @@ class MagicPlayer:
             offset = pygame.math.Vector2(0,-60)
             self.animation_player.create_particles('heal', player.rect.center + offset, groups)
 
-
-
     def flame(self, player:Player, cost:int, groups:list):
-        """_summary_
+        """* If player has enough energy:
+            * Reduce player energy
+            * Calculate player direction
+            * Generate Flame animations
 
         Args:
-            player (Player): _description_
-            cost (int): _description_
-            groups (list): _description_
+            player (Player): Insanitated Player Object
+            cost (int): cost of flame spell
+            groups (list): sprite groups
         """
         if player.energy >= cost:
             player.energy -= cost

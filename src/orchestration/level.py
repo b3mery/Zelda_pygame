@@ -1,7 +1,7 @@
 from unittest.mock import MagicProxy
 import pygame
 import random
-from src.game_objects.base.magic_player import MagicPlayer
+from src.game_objects.base.magic import MagicPlayer
 
 
 from src.utils import settings
@@ -12,7 +12,7 @@ from src.game_objects.base.weapon import Weapon
 from src.game_objects.player import Player
 from src.game_objects.enemy import Enemy
 from src.animation.animation_player import AnimationPlayer
-from src.game_objects.base.magic_player import MagicPlayer
+from src.game_objects.base.magic import MagicPlayer
 from src.orchestration.ui import UI
 from src.orchestration.y_sort_camera_group import YSortCameraGroup
 
@@ -110,12 +110,12 @@ class Level:
         self.current_attack = Weapon([self.visible_sprites, self.attack_sprites], self.player)
     
     def create_magic(self, style, strength, cost):
-        """_summary_
+        """create players magic spell
 
         Args:
-            style (_type_): _description_
-            strength (_type_): _description_
-            cost (_type_): _description_
+            style (str): Type of spell ('heal' or 'flame')
+            strength (int): power of the spell
+            cost (int): cost of using the spell
         """
         if style == 'heal':
             self.magic_player.heal(self.player, strength, cost, [self.visible_sprites])
@@ -123,8 +123,6 @@ class Level:
         if style == 'flame':
             self.magic_player.flame(self.player, cost, [self.visible_sprites, self.attack_sprites])
         
-        print(strength)
-
     def destroy_attack(self):
         """Remove The Attack Graphic
         """
@@ -146,7 +144,7 @@ class Level:
                             for _ in range(random.randint(3,6)):
                                 self.anamation_player.create_grass_particles(pos-offest,[self.visible_sprites])
                             target_sprite.kill()
-                        else:
+                        elif target_sprite.sprite_type != 'player':
                             target_sprite.get_damage(self.player, attack_sprite.sprite_type)
     
     def damage_player(self, amount, attack_type):

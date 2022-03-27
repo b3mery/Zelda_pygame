@@ -8,10 +8,10 @@ from src.game_objects.base.entity import Entity
 
 
 class Enemy(Entity):
-    """_summary_
+    """Enemy Game Object Class
 
-    Args:
-        Entity (pygame.sprite.Sprite): _description_
+    Extends:
+        Entity (pygame.sprite.Sprite): Base Game Object Class
     """
     def __init__(self, monster_name:str, pos:tuple, groups, obstacle_sprites, damage_player:Function, trigger_death_particles:Function) -> None:
         super().__init__(groups)
@@ -50,10 +50,15 @@ class Enemy(Entity):
 
         # Invincibility
         self.vulnerable = True
-        self.hit_time = None
-        self.invincibility_cooldown_duration = 300
+        self.hurt_time = None
+        self.vulnerability_cooldown_duration = 300
 
     def __import_graphics(self, monster_name):
+        """Import the monster graphics from the monsters folder
+
+        Args:
+            monster_name (str): monster name corresponding to the monster folder
+        """
         self.animations = {'idle': [], 'move': [], 'attack': [] }
         main_path = f'assets/graphics/monsters/{monster_name}/'
         for anamation in self.animations.keys(): 
@@ -87,7 +92,7 @@ class Enemy(Entity):
         """Check the Distance from the Player, update Status
 
         Args:
-            player (Player): _description_
+            player (Player): Insanitated Player object
         """
         distance = self.__get_player_distance_direction(player)[0]
 
@@ -140,7 +145,7 @@ class Enemy(Entity):
             self.image.set_alpha(255)
     
     def __cooldowns(self):
-        """_summary_
+        """Cool down timer methods 
         """
         current_time = pygame.time.get_ticks()
         
@@ -148,16 +153,16 @@ class Enemy(Entity):
         if (not self.can_attack and current_time - self.attack_time >= self.attack_cooldown_duration ):
             self.can_attack = True
         
-        # Invinciblity cool down
-        if not self.vulnerable and current_time - self.hit_time >= self.invincibility_cooldown_duration:
+        # Invincibility cool down
+        if not self.vulnerable and current_time - self.hurt_time >= self.vulnerability_cooldown_duration:
             self.vulnerable = True
 
     def get_damage(self, player:Player, attack_type):
-        """_summary_
+        """Calculate the damage inflicted by player
 
         Args:
-            player (Player): _description_
-            attack_type (_type_): _description_
+            player (Player): Instanitated Player object
+            attack_type (str): 'weapon' or 'magic'
         """
         if self.vulnerable:
             # Update Direction 
@@ -165,7 +170,7 @@ class Enemy(Entity):
             
             # Update Timer
             self.vulnerable = False
-            self.hit_time = pygame.time.get_ticks()
+            self.hurt_time = pygame.time.get_ticks()
             
             # Weapon Attack Types:
             if attack_type == 'weapon': 
@@ -190,7 +195,7 @@ class Enemy(Entity):
             self.trigger_death_particles(self.rect.center, self.monster_name)
 
     def update(self) -> None:
-        """_summary_
+        """Extends pygame update, updates the game screen
         """
         self.__hit_reaction()
         self.move(self.speed)
@@ -199,10 +204,10 @@ class Enemy(Entity):
         self.__check_death()
 
     def enemy_update(self, player:Player) -> None:
-        """_summary_
+        """Custom Update Game screen method for player interactions
 
         Args:
-            player (Player): _description_
+            player (Player): Insanitated Player Object
         """
         self.__set_status(player)
         self.__actions(player)
