@@ -20,6 +20,7 @@ class Player(Entity):
                  create_magic:Function  
                 ):
         super().__init__(groups)
+        self.sprite_type = 'player'
         self.image = pygame.image.load('assets/graphics/test/player.png').convert_alpha()
         self.rect = self.image.get_rect(topleft = pos)
         self.hitbox = self.rect.inflate(0,-26)
@@ -275,6 +276,16 @@ class Player(Entity):
         base_damage  = self.stats['attack']
         weapon_damage = settings.weapon_data[self.weapon]['damage']
         return base_damage + weapon_damage
+
+    def get_full_magic_damage(self):
+        """_summary_
+
+        Returns:
+            _type_: _description_
+        """
+        base_damage  = self.stats['attack']
+        spell_damage = settings.magic_data[self.magic]['strength']
+        return base_damage + spell_damage
 
     def __energy_recovery(self):
         """_summary_

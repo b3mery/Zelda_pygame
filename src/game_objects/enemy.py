@@ -172,7 +172,7 @@ class Enemy(Entity):
                 self.health -= player.get_full_weapon_damage()
             else: 
                 # magic damage
-                pass
+                self.health -= player.get_full_magic_damage()
             
     
     def __hit_reaction(self):
