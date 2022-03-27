@@ -8,15 +8,16 @@ class Game:
         # General Setup
         pygame.init()
         self.screen = pygame.display.set_mode((settings.WIDTH,settings.HEIGHT))
-        pygame.display.set_caption('Zelda Py')
+
+        pygame.display.set_caption(f'Zelda Py 🔺')
         self.clock = pygame.time.Clock()
 
         self.level = Level()
 
         # main sound
-        main_sound = pygame.mixer.Sound(open('assets/audio/main.ogg'))
-        main_sound.set_volume(0.5)
-        main_sound.play(loops=1)
+        self.main_sound = pygame.mixer.Sound(open('assets/audio/main.ogg'))
+        self.main_sound.set_volume(0.5)
+        self.main_sound.play(loops=1)
 
     def run(self):
         """PyGame Game Loop"""

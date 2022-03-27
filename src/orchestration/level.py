@@ -13,8 +13,8 @@ from src.game_objects.player import Player
 from src.game_objects.enemy import Enemy
 from src.animation.animation_player import AnimationPlayer
 from src.game_objects.base.magic import MagicPlayer
-from src.orchestration.ui import UI
-from src.orchestration.upgrade import Upgrade
+from src.user_interface.heads_up_display import HeadsUpDisplay
+from src.user_interface.upgrade_menu import UpgradeMenu
 from src.orchestration.y_sort_camera_group import YSortCameraGroup
 
 # animation 
@@ -39,8 +39,8 @@ class Level:
         self.create_map()
 
         # User Interface
-        self.ui = UI()
-        self.upgrade = Upgrade(self.player)
+        self.ui = HeadsUpDisplay()
+        self.upgrade = UpgradeMenu(self.player)
 
         # particles
         self.anamation_player = AnimationPlayer()

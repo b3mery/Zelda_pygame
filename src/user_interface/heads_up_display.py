@@ -2,7 +2,7 @@ import pygame
 from src.game_objects.player import Player
 from src.utils import settings
 
-class UI:
+class HeadsUpDisplay:
     """User Interface Heads up Display
     Draws the Stats and Weapon/Magic to the game screen
     """
