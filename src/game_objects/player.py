@@ -23,7 +23,7 @@ class Player(Entity):
         self.sprite_type = 'player'
         self.image = pygame.image.load('assets/graphics/test/player.png').convert_alpha()
         self.rect = self.image.get_rect(topleft = pos)
-        self.hitbox = self.rect.inflate(0,-26)
+        self.hitbox = self.rect.inflate(settings.HITBOX_OFFSET[self.sprite_type])
 
         # Graphics Set up
         self.__import_player_assets()

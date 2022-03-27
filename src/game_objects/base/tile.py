@@ -23,8 +23,7 @@ class Tile(pygame.sprite.Sprite):
         if self.sprite_type == 'object':
             # Objects are double tilesize, adjust Y for placement
             self.rect = self.image.get_rect(topleft = (pos[0],  pos[1] - settings.TILESIZE))
-            # Reduce y hitbox of Object by half its size to give illusion of walking behind
-            self.hitbox = self.rect.inflate(0,-settings.TILESIZE)
         else:
             self.rect = self.image.get_rect(topleft = pos)
-            self.hitbox = self.rect.inflate(0,-10)
+        
+        self.hitbox = self.rect.inflate(settings.HITBOX_OFFSET[self.sprite_type])
