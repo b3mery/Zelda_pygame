@@ -93,7 +93,8 @@ class Level:
                                         (x,y),
                                         [self.visible_sprites, self.attackable_sprites],
                                         self.obstacle_sprites,
-                                        self.damage_player
+                                        self.damage_player,
+                                        self.trigger_death_particles
                                     )
                             
 
@@ -140,11 +141,20 @@ class Level:
                             target_sprite.get_damage(self.player, attack_sprite.sprite_type)
     
     def damage_player(self, amount, attack_type):
+        """_summary_
+
+        Args:
+            amount (_type_): _description_
+            attack_type (_type_): _description_
+        """
         if self.player.vulnerable:
             self.player.health -= amount
             self.player.vulnerable = False
             self.player.hurt_time = pygame.time.get_ticks()
             self.anamation_player.generate_particles(attack_type, self.player.rect.center, [self.visible_sprites])
+    
+    def trigger_death_particles(self, pos, particle_type):
+        self.anamation_player.generate_particles(particle_type, pos, [self.visible_sprites])
 
     def run(self):
         """Update and draw the sprites to the game
