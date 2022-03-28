@@ -16,7 +16,7 @@ class Player(Entity):
                  obstacle_sprites:pygame.sprite.Group,
                  create_attack:Function,
                  destroy_attack:Function,
-                 create_magic:Function  
+                 create_magic:Function,  
                 ):
         super().__init__(groups)
         self.sprite_type = 'player'

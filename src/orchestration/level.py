@@ -1,5 +1,6 @@
 import pygame
 import random
+from src.user_interface.game_over import GameOverInterface
 
 from src.utils import settings
 from src.utils import util
@@ -28,9 +29,16 @@ class Level:
     * Running the main game update loop
     """
     def __init__(self) -> None:
+        
         # get the display surface
         self.display_surface = pygame.display.get_surface()
-        self.game_paused = False
+        self.is_game_paused = False
+        self.is_game_over = False
+        
+        # main sound
+        self.main_sound = pygame.mixer.Sound(open('assets/audio/main.ogg'))
+        self.main_sound.set_volume(0.5)
+        self.main_sound.play(loops=1)
 
         # Sprite group setup
         self.visible_sprites = YSortCameraGroup()
@@ -47,10 +55,12 @@ class Level:
         # User Interface
         self.heads_up_display = HeadsUpDisplay()
         self.upgrade_menu = UpgradeMenu(self.player)
+        self.game_over_display = GameOverInterface()
 
         # particles
         self.anamation_player = AnimationPlayer()
         self.magic = Magic(self.anamation_player)
+
 
         
     def __create_level_map(self):
@@ -234,7 +244,13 @@ class Level:
     def toggle_upgrade_menu(self):
         """Pause the game
         """
-        self.game_paused = not self.game_paused
+        self.is_game_paused = not self.is_game_paused
+
+    def check_game_over(self):
+        """Pause the game
+        """
+        if self.player.health <= 0:
+            self.is_game_over = not self.is_game_over
 
     ####################################### Game Loop #############################################################                         
     def run(self):
@@ -243,10 +259,14 @@ class Level:
         self.visible_sprites.custom_draw(self.player)
         self.heads_up_display.display(self.player)
 
-        if self.game_paused:
+        if self.is_game_paused:
             self.upgrade_menu.display()
-        else:
+        if self.is_game_over:
+            self.main_sound.stop()
+            self.game_over_display.display()
+        if not (self.is_game_over or self.is_game_paused):
             self.visible_sprites.update()
             self.visible_sprites.enemy_update(self.player)
             self.__detect_player_attacks()
+            self.check_game_over()
 
