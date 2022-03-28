@@ -25,6 +25,11 @@ WATER_COLOR = '#71ddee'
 UI_BG_COLOR = '#222222'
 UI_BORDER_COLOR = '#111111'
 TEXT_COLOR = '#EEEEEE'
+TEXT_COLOR_SELECTED = '#111111'
+
+# Game over
+GAME_OVER_TEXT_COLOR = 'red'
+TITLE_FONT_SIZE = 76
  
 # ui colors
 HEALTH_COLOR = 'red'
@@ -32,10 +37,52 @@ ENERGY_COLOR = 'blue'
 UI_BORDER_COLOR_ACTIVE = 'gold'
  
 # upgrade menu
-TEXT_COLOR_SELECTED = '#111111'
 BAR_COLOR = '#EEEEEE'
 BAR_COLOR_SELECTED = '#111111'
 UPGRADE_BG_COLOR_SELECTED = '#EEEEEE'
+
+####################################### Player Attributes #################################################################
+        # Stats
+player_stats = {
+    'health': 100,
+    'energy':60,
+    'attack': 10,
+    'magic': 4,
+    'speed': 5
+}
+player_max_stats = {
+    'health': 300, 
+    'energy': 140, 
+    'attack': 20, 
+    'magic' : 10,
+    'speed': 10
+}
+player_upgrade_cost = {
+    'health': 100,
+    'energy': 100, 
+    'attack': 100, 
+    'magic' : 100, 
+    'speed': 100
+}
+
+player_animations = {
+            # Movement 
+            'up' : [],
+            'down': [],
+            'left': [],
+            'right': [],
+            # idle
+            'right_idle': [],
+            'left_idle': [],
+            'up_idle': [],
+            'down_idle': [],
+            # Attack
+            'right_attack': [],
+            'left_attack': [],
+            'up_attack' : [],
+            'down_attack': []
+        } 
+
 
 
 ######################################### Player Weapons #############################################################

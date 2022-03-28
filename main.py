@@ -1,7 +1,7 @@
 import pygame, sys
 from src.utils import settings
 from src.orchestration.level import Level
-
+    
 class Game:
     """Game Class"""
     def __init__(self) -> None:
@@ -14,8 +14,6 @@ class Game:
 
         self.level = Level()
 
-
-
     def run(self):
         """PyGame Game Loop"""
         while True:
@@ -23,6 +21,7 @@ class Game:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit() 
+                # Toogle Menu    
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_m:
                         self.level.toggle_upgrade_menu()

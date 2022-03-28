@@ -1,6 +1,6 @@
 import pygame
 import random
-from src.user_interface.game_over import GameOverInterface
+from src.user_interface.game_over_interface import GameOverInterface
 
 from src.utils import settings
 from src.utils import util
@@ -55,11 +55,11 @@ class Level:
         # User Interface
         self.heads_up_display = HeadsUpDisplay()
         self.upgrade_menu = UpgradeMenu(self.player)
-        self.game_over_display = GameOverInterface()
 
         # particles
         self.anamation_player = AnimationPlayer()
         self.magic = Magic(self.anamation_player)
+        self.game_over_display = GameOverInterface(self.rebuild_level)
 
 
         
@@ -251,6 +251,24 @@ class Level:
         """
         if self.player.health <= 0:
             self.is_game_over = not self.is_game_over
+
+
+    def rebuild_level(self):
+        """Kill all sprites, re
+        """
+        for sprite in self.visible_sprites:
+            sprite.kill()
+        for sptire in self.obstacle_sprites:
+            sptire.kill()
+        for sprite in self.attack_sprites:
+            sprite.kill()
+        for sprite in self.attackable_sprites:
+            sprite.kill()
+        
+        self.__create_level_map()
+        self.main_sound.play(loops=1)
+        self.is_game_over = False
+
 
     ####################################### Game Loop #############################################################                         
     def run(self):

@@ -69,27 +69,9 @@ class Player(Entity):
         self.weapon_attack_sound.set_volume(0.40)
 
         # Stats
-        self.stats = {
-            'health': 100,
-            'energy':60,
-            'attack': 10,
-            'magic': 4,
-            'speed': 5
-        }
-        self.max_stats = {
-            'health': 300, 
-            'energy': 140, 
-            'attack': 20, 
-            'magic' : 10,
-            'speed': 10
-        }
-        self.upgrade_cost = {
-            'health': 100,
-            'energy': 100, 
-            'attack': 100, 
-            'magic' : 100, 
-            'speed': 100
-        }
+        self.stats = settings.player_stats
+        self.max_stats = settings.player_max_stats
+        self.upgrade_cost = settings.player_upgrade_cost
         self.health = self.stats['health']
         self.energy = self.stats['energy']
         self.exp = 50000
@@ -99,23 +81,7 @@ class Player(Entity):
         """Import player graphic assets from player sub folders
         """
         character_path = "assets/graphics/player/"
-        self.animations = {
-            # Movement 
-            'up' : [],
-            'down': [],
-            'left': [],
-            'right': [],
-            # idle
-            'right_idle': [],
-            'left_idle': [],
-            'up_idle': [],
-            'down_idle': [],
-            # Attack
-            'right_attack': [],
-            'left_attack': [],
-            'up_attack' : [],
-            'down_attack': []
-        } 
+        self.animations =settings.player_animations
         for animation_state in self.animations.keys():
             folder_path = f"{character_path}/{animation_state}"
             self.animations[animation_state] = util.import_folder(folder_path)
