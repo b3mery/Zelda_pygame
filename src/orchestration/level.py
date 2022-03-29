@@ -2,6 +2,7 @@ import pygame
 import random
 from src.user_interface.game_over_interface import GameOverInterface
 from src.user_interface.title_screen_interface import TitleScreenInterface
+from src.user_interface.level_complete_interface import LevelCompleteInterface
 
 from src.utils import settings
 from src.utils import util
@@ -34,7 +35,9 @@ class Level:
         # get the display surface
         self.display_surface = pygame.display.get_surface()
         self.level_nbr = 1
-        self.max_nbr_levels = 1
+        self.max_nbr_levels = settings.NBR_OF_LEVELS
+        self.is_level_complete = False
+        self.rebuild_player = True
         self.is_game_running = False
         self.is_game_paused = False
         self.is_game_over = False
@@ -66,6 +69,7 @@ class Level:
         self.heads_up_display = HeadsUpDisplay()
         self.title_screen_ui = TitleScreenInterface(self.activate_level)
         self.upgrade_menu = UpgradeMenu(self.player)
+        self.level_complete_ui = LevelCompleteInterface(self.rebuild_level)
         self.game_over_display = GameOverInterface(self.rebuild_level)
 
 
@@ -135,7 +139,8 @@ class Level:
             id (str): Id form the tiled csv layour
             pos (tuple): X and Y position
         """
-        if id == "394": # player 
+        if id == "394" and self.rebuild_player: # player 
+            self.rebuild_player = False
             self.player = Player(
                     pos,
                     [self.visible_sprites, self.attackable_sprites],
@@ -152,6 +157,7 @@ class Level:
                     pos,
                     [self.visible_sprites, self.attackable_sprites, self.enemy_sprites],
                     self.obstacle_sprites,
+                    self.level_nbr - 1,
                     self.damage_player,
                     self.trigger_death_particles,
                     self.add_xp
@@ -265,24 +271,37 @@ class Level:
             self.game_over_display.title_font_color = settings.GAME_WON_TEXT_COLOR
             self.is_game_over = not self.is_game_over
 
+        if len(self.enemy_sprites) == 0 and self.level_nbr < self.max_nbr_levels:
+            self.is_level_complete = True
+            self.level_nbr += 1
+
     def activate_level(self):
         self.is_game_running = True
 
     def rebuild_level(self):
-        """Kill all sprites, re
+        """Kill all sprites, rebuild
         """
+        self.rebuild_player = self.player.health <= 0
+
         for sprite in self.visible_sprites:
-            sprite.kill()
-        for sptire in self.obstacle_sprites:
-            sptire.kill()
+            if sprite.sprite_type != 'player':
+                sprite.kill()
+        for sprite in self.obstacle_sprites:
+            if sprite.sprite_type != 'player':
+                sprite.kill()
         for sprite in self.attack_sprites:
-            sprite.kill()
+            if sprite.sprite_type != 'player':
+                sprite.kill()
         for sprite in self.attackable_sprites:
-            sprite.kill()
+            if sprite.sprite_type != 'player':
+                sprite.kill()
+        if self.rebuild_player:
+            self.player.kill()        
         
         self.__create_level_map()
         self.main_sound.play(loops=1)
         self.is_game_over = False
+        self.is_level_complete = False    
 
 
     ####################################### Game Loop #############################################################                         
@@ -294,6 +313,8 @@ class Level:
         if not self.is_game_running:
             # Title Screen
             self.title_screen_ui.display()
+        elif self.is_level_complete:
+            self.level_complete_ui.display()
         elif self.is_game_over:
             # Game Over 
             self.main_sound.stop()

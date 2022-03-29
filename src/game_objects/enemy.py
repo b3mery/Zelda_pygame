@@ -13,11 +13,11 @@ class Enemy(Entity):
     Extends:
         Entity (pygame.sprite.Sprite): Base Game Object Class
     """
-    def __init__(self, monster_name:str, pos:tuple, groups, obstacle_sprites, damage_player:Function, trigger_death_particles:Function, add_exp:Function) -> None:
+    def __init__(self, monster_name:str, pos:tuple, groups, obstacle_sprites,level_nbr, damage_player:Function, trigger_death_particles:Function, add_exp:Function) -> None:
         super().__init__(groups)
         # General Setup
         self.sprite_type = 'enemy'
-
+        self.level_upgrade_factor = level_nbr * settings.LEVEL_INCREASE_PERCENT
         # Graphic Setup
         self.__import_graphics(monster_name)
         self.status = 'idle'
@@ -31,7 +31,7 @@ class Enemy(Entity):
         # Stats
         self.monster_name = monster_name
         monster_info = settings.monster_data[self.monster_name]
-        self.health = monster_info['health']
+        self.health = monster_info['health']  
         self.exp = monster_info['exp']
         self.speed = monster_info['speed']
         self.attack_damage = monster_info['damage']
@@ -39,6 +39,7 @@ class Enemy(Entity):
         self.attack_radius = monster_info['attack_radius']
         self.notice_radius = monster_info['notice_radius']
         self.attack_type = monster_info['attack_type']
+        self.__upgrade_stats_for_level()
 
         # Player Interaction
         self.can_attack = True
@@ -60,6 +61,12 @@ class Enemy(Entity):
         self.death_sound.set_volume(0.2)
         self.hit_sound.set_volume(0.2)
         self.attack_sound.set_volume(0.3)
+
+    def __upgrade_stats_for_level(self):
+        self.health += self.health * self.level_upgrade_factor
+        self.exp += self.exp * self.level_upgrade_factor
+        self.speed += self.speed * self.level_upgrade_factor
+        self.attack_damage += self.attack_damage * self.level_upgrade_factor
 
     def __import_graphics(self, monster_name):
         """Import the monster graphics from the monsters folder

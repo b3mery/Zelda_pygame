@@ -12,6 +12,9 @@ HITBOX_OFFSET = {
     'invisible': (0,0)
 }
 
+NBR_OF_LEVELS = 5
+LEVEL_INCREASE_PERCENT = 0.10
+
 
 ############################################### Display #######################################################################
 # UI
@@ -56,7 +59,6 @@ player_stats = {
     'attack': 10,
     'magic': 4,
     'speed': 5,
-    'resistance': 0.10
 }
 player_max_stats = {
     'health': 300, 
