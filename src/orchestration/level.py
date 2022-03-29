@@ -218,8 +218,7 @@ class Level:
                     self.anamation_player.create_grass_particles(pos-offest,[self.visible_sprites])
                 target_sprite.kill()
             
-            # elif target_sprite.sprite_type != 'player':
-            else:
+            elif target_sprite.sprite_type != 'player':
                 target_sprite.get_damage(self.player, attack_sprite.sprite_type)
 
     def damage_player(self, amount, attack_type):
@@ -302,7 +301,6 @@ class Level:
         self.main_sound.play(loops=1)
         self.is_game_over = False
         self.is_level_complete = False    
-
 
     ####################################### Game Loop #############################################################                         
     def run(self):
