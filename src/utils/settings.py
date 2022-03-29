@@ -49,13 +49,14 @@ BAR_COLOR_SELECTED = '#111111'
 UPGRADE_BG_COLOR_SELECTED = '#EEEEEE'
 
 ####################################### Player Attributes #################################################################
-        # Stats
+# Stats
 player_stats = {
     'health': 100,
     'energy':60,
     'attack': 10,
     'magic': 4,
-    'speed': 5
+    'speed': 5,
+    'resistance': 0.10
 }
 player_max_stats = {
     'health': 300, 
@@ -89,8 +90,6 @@ player_animations = {
             'up_attack' : [],
             'down_attack': []
         } 
-
-
 
 ######################################### Player Weapons #############################################################
 # weapons

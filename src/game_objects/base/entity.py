@@ -32,8 +32,8 @@ class Entity(pygame.sprite.Sprite):
         """Check Sprite collisions on x Axis
         """
         for sprite in self.obstacle_sprites:
-            # if sprite == self:
-            #     return None
+            if sprite == self:
+                return None
             if sprite.hitbox.colliderect(self.hitbox):
                 if self.direction.x > 0: # moving right
                     self.hitbox.right = sprite.hitbox.left
@@ -44,14 +44,20 @@ class Entity(pygame.sprite.Sprite):
         """Check for sprite collisions on the y Axis
         """
         for sprite in self.obstacle_sprites:
-            # if sprite == self:
-            #     return None
+            if sprite == self:
+                return None
             if sprite.hitbox.colliderect(self.hitbox):
                 if self.direction.y > 0: # moving down
                     self.hitbox.bottom = sprite.hitbox.top
                 if self.direction.y < 0: # moving moving up
                     self.hitbox.top = sprite.hitbox.bottom
-
+    
+    def hit_reaction(self):
+        """Move the enemy back if they have been hit
+        """
+        if not self.vulnerable:
+            self.direction *=  -self.resistance
+    
     def wave_value(self):
         """Calculate the wave value.
         used for flicker effect.

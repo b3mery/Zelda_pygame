@@ -75,6 +75,7 @@ class Player(Entity):
         self.upgrade_cost = settings.player_upgrade_cost
         self.health = self.stats['health']
         self.energy = self.stats['energy']
+        self.resistance = self.stats['resistance']
         self.exp = 50000
         
 
@@ -277,6 +278,24 @@ class Player(Entity):
     def get_cost_by_index(self, index:int):
         return list(self.upgrade_cost.values())[index]
 
+    def get_damage(self, *args):
+        """Calculate the damage inflicted by player
+
+        Args:
+            player (Player): Instanitated Player object
+            attack_type (str): 'weapon' or 'magic'
+        """
+        attack_type = args[1]
+        if self.vulnerable and attack_type == 'magic':
+            # self.hit_sound.play()
+            # Update Timer
+            self.vulnerable = False
+            self.hurt_time = pygame.time.get_ticks()
+        
+            # magic damage
+            self.health -= self.get_full_magic_damage()
+
+
     def __energy_recovery(self):
         """_summary_
         """
@@ -295,5 +314,6 @@ class Player(Entity):
         self.__set_status()
         self.__animate()
         self.__cooldowns()
+        self.hit_reaction()
         self.move(self.stats['speed'])
         self.__energy_recovery()    

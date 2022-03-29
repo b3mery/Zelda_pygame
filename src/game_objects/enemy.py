@@ -189,7 +189,7 @@ class Enemy(Entity):
                 # magic damage
                 self.health -= player.get_full_magic_damage()
             
-    def __hit_reaction(self):
+    def hit_reaction(self):
         """Move the enemy back if they have been hit
         """
         if not self.vulnerable:
@@ -208,7 +208,7 @@ class Enemy(Entity):
     def update(self) -> None:
         """Extends pygame update, updates the game screen
         """
-        self.__hit_reaction()
+        self.hit_reaction()
         self.move(self.speed)
         self.__animate()
         self.__cooldowns()
