@@ -1,6 +1,7 @@
 import pygame, sys
 from src.utils import settings
 from src.orchestration.level import Level
+from src.utils import keyboard_control_settings as input
     
 class Game:
     """Game Class"""
@@ -9,7 +10,7 @@ class Game:
         pygame.init()
         self.screen = pygame.display.set_mode((settings.WIDTH,settings.HEIGHT))
 
-        pygame.display.set_caption(f'Zelda Py 🔺')
+        pygame.display.set_caption(settings.GAME_TITLE)
         self.clock = pygame.time.Clock()
 
         self.level = Level()
@@ -23,7 +24,7 @@ class Game:
                     sys.exit() 
                 # Toogle Menu    
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_m:
+                    if event.key == input.MENU:
                         self.level.toggle_upgrade_menu()
                               
             self.screen.fill(settings.WATER_COLOR)

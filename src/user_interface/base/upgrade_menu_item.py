@@ -2,7 +2,7 @@ import pygame
 from src.utils import settings
 from src.game_objects.player import Player
 
-class MenuItem():
+class UpgradeMenuItem():
     """_summary_
     """
     def __init__(self, left, top, width, height, index, font) -> None:

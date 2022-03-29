@@ -1,6 +1,7 @@
 import pygame
 import random
 from src.user_interface.game_over_interface import GameOverInterface
+from src.user_interface.title_screen_interface import TitleScreenInterface
 
 from src.utils import settings
 from src.utils import util
@@ -32,6 +33,9 @@ class Level:
         
         # get the display surface
         self.display_surface = pygame.display.get_surface()
+        self.level_nbr = 1
+        self.max_nbr_levels = 1
+        self.is_game_running = False
         self.is_game_paused = False
         self.is_game_over = False
         
@@ -43,22 +47,25 @@ class Level:
         # Sprite group setup
         self.visible_sprites = YSortCameraGroup()
         self.obstacle_sprites = pygame.sprite.Group()
+   
         # Attack Sprites
-        self.current_attack = None
-
         self.attack_sprites =  pygame.sprite.Group()
-        self.attackable_sprites =  pygame.sprite.Group()
+        self.attackable_sprites = pygame.sprite.Group()
+        self.enemy_sprites = pygame.sprite.Group()
         # sprite setup
         # Creates monsters, tiles and player
         self.__create_level_map()
 
-        # User Interface
-        self.heads_up_display = HeadsUpDisplay()
-        self.upgrade_menu = UpgradeMenu(self.player)
 
+        self.current_attack = None
         # particles
         self.anamation_player = AnimationPlayer()
         self.magic = Magic(self.anamation_player)
+        
+        # User Interface
+        self.heads_up_display = HeadsUpDisplay()
+        self.title_screen_ui = TitleScreenInterface(self.activate_level)
+        self.upgrade_menu = UpgradeMenu(self.player)
         self.game_over_display = GameOverInterface(self.rebuild_level)
 
 
@@ -143,7 +150,7 @@ class Level:
                 Enemy(
                     monster_name,
                     pos,
-                    [self.visible_sprites, self.attackable_sprites],
+                    [self.visible_sprites, self.attackable_sprites, self.enemy_sprites],
                     self.obstacle_sprites,
                     self.damage_player,
                     self.trigger_death_particles,
@@ -250,8 +257,15 @@ class Level:
         """Pause the game
         """
         if self.player.health <= 0:
+            self.game_over_display.title_font_color = settings.GAME_OVER_TEXT_COLOR
+            self.is_game_over = not self.is_game_over
+        if len(self.enemy_sprites) == 0 and self.level_nbr == self.max_nbr_levels:
+            self.game_over_display.title = 'You Won'
+            self.game_over_display.title_font_color = settings.GAME_WON_TEXT_COLOR
             self.is_game_over = not self.is_game_over
 
+    def activate_level(self):
+        self.is_game_running = True
 
     def rebuild_level(self):
         """Kill all sprites, re
@@ -273,16 +287,21 @@ class Level:
     ####################################### Game Loop #############################################################                         
     def run(self):
         """Update and draw the sprites to the game
-        """
+        """ 
         self.visible_sprites.custom_draw(self.player)
         self.heads_up_display.display(self.player)
-
-        if self.is_game_paused:
-            self.upgrade_menu.display()
-        if self.is_game_over:
+        if not self.is_game_running:
+            # Title Screen
+            self.title_screen_ui.display()
+        elif self.is_game_over:
+            # Game Over 
             self.main_sound.stop()
             self.game_over_display.display()
-        if not (self.is_game_over or self.is_game_paused):
+        elif self.is_game_paused:
+            # Upgrade screen
+            self.upgrade_menu.display()
+        else:
+            # run the game
             self.visible_sprites.update()
             self.visible_sprites.enemy_update(self.player)
             self.__detect_player_attacks()

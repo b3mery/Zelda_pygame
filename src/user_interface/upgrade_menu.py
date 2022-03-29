@@ -2,7 +2,7 @@ import pygame
 
 from src.game_objects.player import Player
 from src.user_interface.base.menu_base import MenuBase
-from src.user_interface.menu_item import MenuItem
+from src.user_interface.base.upgrade_menu_item import UpgradeMenuItem
 from src.utils import settings
 
 class UpgradeMenu(MenuBase):
@@ -38,7 +38,7 @@ class UpgradeMenu(MenuBase):
             # vertical
             top = self.display_surface.get_size()[1] * 0.1 # 10percent of y axis
             # create object:
-            item = MenuItem(left, top, self.width, self.height, index, self.font)
+            item = UpgradeMenuItem(left, top, self.width, self.height, index, self.font)
             self.item_list.append(item)
 
     def display(self):

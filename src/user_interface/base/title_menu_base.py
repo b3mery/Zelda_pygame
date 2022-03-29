@@ -20,12 +20,12 @@ class TitleMenuInterfaceBase(MenuBase):
         self.create_menu_items()
         
     def __draw_title(self):
-        title_surf = self.title_font.render(self.title,False, self.title_font_color)
-        
+        title_surf = self.title_font.render(self.title,False, self.title_font_color, settings.TITLE_BG_COLOR)
         x = self.display_surface.get_size()[0] * 0.5
         y = self.display_surface.get_size()[1] * 0.3
 
         title_rect = title_surf.get_rect(midtop = (x,y))
+        # title_rect.inflate(0,250)
         self.display_surface.blit(title_surf, title_rect)
 
     def create_menu_items(self):

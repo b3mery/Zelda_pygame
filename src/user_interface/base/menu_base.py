@@ -1,9 +1,7 @@
 import pygame 
 
-from src.game_objects.player import Player
-from src.user_interface.menu_item import MenuItem
 from src.utils import settings
-
+from src.utils import keyboard_control_settings as input
 class MenuBase:
     """Base Menu UI Class for keyboard selection 
     """
@@ -26,17 +24,17 @@ class MenuBase:
         if not self.can_move:
             return None
 
-        if keys[pygame.K_RIGHT] and self.selection_index < (len(self.attribute_names) -1):
+        if keys[input.RIGHT] and self.selection_index < (len(self.attribute_names) -1):
             self.selection_index += 1
             self.can_move = False
             self.selection_time = pygame.time.get_ticks()
         
-        if keys[pygame.K_LEFT] and self.selection_index >= 1:
+        if keys[input.LEFT] and self.selection_index >= 1:
             self.selection_index -= 1
             self.can_move = False
             self.selection_time = pygame.time.get_ticks()
             
-        if keys[pygame.K_SPACE]:
+        if keys[input.OK]:
             self.can_move = False
             self.selection_time = pygame.time.get_ticks()
             self.trigger()
