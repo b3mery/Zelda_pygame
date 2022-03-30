@@ -6,7 +6,8 @@ from src.user_interface.base.upgrade_menu_item import UpgradeMenuItem
 from src.utils import settings
 
 class UpgradeMenu(MenuBase):
-    """_summary_
+    """Play Stats Upgrade Menu Interface
+    Extends: MenuBase
     """
     def __init__(self, player:Player) -> None:
         # General Setup:
@@ -26,7 +27,7 @@ class UpgradeMenu(MenuBase):
         self.item_list[self.selection_index].trigger_upgrade(self.player)
 
     def create_items(self):
-        """_summary_
+        """Create Item Stats
         """
         self.item_list = []
 
@@ -42,7 +43,7 @@ class UpgradeMenu(MenuBase):
             self.item_list.append(item)
 
     def display(self):
-        """_summary_
+        """Display Stats to Screen
         """
         super().display()
 

@@ -59,7 +59,7 @@ class HeadsUpDisplay:
         # Draw border 
         pygame.draw.rect(self.display_surface, settings.UI_BORDER_COLOR, bg_rect, 3)
 
-    def __show_exp(self, exp:int):
+    def __show_exp(self, exp):
         """Draw experience points to game screen
 
         Args:
@@ -115,7 +115,23 @@ class HeadsUpDisplay:
         rect = surf.get_rect(center = bg_rect.center)
         self.display_surface.blit(surf, rect)
 
-    def display(self, player:Player):
+    def __show_level(self, level_nbr:int):
+        desc = f'Level: {level_nbr}'
+        # build display
+        text_surf = self.font.render(desc, False, settings.TEXT_COLOR)
+        x = self.display_surface.get_size()[0] * 0.5
+        y = self.display_surface.get_size()[1] *0.05
+        text_rect = text_surf.get_rect(center=(x,y))
+
+        # display on game screen
+        # background
+        pygame.draw.rect(self.display_surface,settings.UI_BG_COLOR, text_rect.inflate(20,20))
+        # contents
+        self.display_surface.blit(text_surf, text_rect)
+        # border
+        pygame.draw.rect(self.display_surface,settings.UI_BORDER_COLOR, text_rect.inflate(20,20),3)
+
+    def display(self, player:Player, level_nbr:int):
         """Draw UI Items to the Game Screen
 
         Args:
@@ -124,6 +140,7 @@ class HeadsUpDisplay:
         self.__show_bar(player.health,player.stats['health'],self.health_bar_rect, settings.HEALTH_COLOR)
         self.__show_bar(player.energy,player.stats['energy'],self.energy_bar_rect, settings.ENERGY_COLOR)
         self.__show_exp(player.exp)
+        self.__show_level(level_nbr)
         # Weapon Overlay 
         self.__item_overlay(10,630, player.weapon_index,self.weapon_graphics,not player.can_switch_weapon)
         # Magic Overlay

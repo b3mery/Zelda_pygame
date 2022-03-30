@@ -3,7 +3,8 @@ from src.user_interface.base.title_menu_base import TitleMenuInterfaceBase
 from src.utils import settings
 
 class GameOverInterface(TitleMenuInterfaceBase):
-    """_summary_
+    """Game Over user interface for restarting or quitting the game
+    Extends: TitleMenuInterfaceBase
     """
     def __init__(self, rebuild) -> None:
         super().__init__()

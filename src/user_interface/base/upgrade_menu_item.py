@@ -3,7 +3,7 @@ from src.utils import settings
 from src.game_objects.player import Player
 
 class UpgradeMenuItem():
-    """_summary_
+    """Base Menu Item for each Stat Item
     """
     def __init__(self, left, top, width, height, index, font) -> None:
         self.rect = pygame.Rect(left, top, width, height)
@@ -11,13 +11,13 @@ class UpgradeMenuItem():
         self.font = font
     
     def __display_names(self, surface, name, cost, value, max_value, selected:bool):
-        """_summary_
+        """Draw the Names to game screen
 
         Args:
-            surface (_type_): _description_
-            name (_type_): _description_
-            cost (_type_): _description_
-            selected (_type_): _description_
+            surface (pygame.display_suraface): the game surface
+            name (str): name of stat
+            cost (int or float): cost of the stat
+            selected (bool): currently selected 
         """
         color = settings.TEXT_COLOR_SELECTED if selected else settings.TEXT_COLOR
 
@@ -40,6 +40,7 @@ class UpgradeMenuItem():
         surface.blit(cost_surf, cost_rect)
 
     def __display_bar(self, surface, value, max_value, selected):
+        """Draw stat bar """
         # drawing setup
         color = settings.BAR_COLOR_SELECTED if selected else settings.BAR_COLOR
         top = self.rect.midtop + pygame.math.Vector2(0,80) 
@@ -56,15 +57,16 @@ class UpgradeMenuItem():
 
     
     def trigger_upgrade(self, player:Player):
-        """_summary_
+        """Trigger Selection, upgrade each stat if allowed
 
         Args:
-            player (Player): _description_
+            player (Player): Insanitated Player Object
         """
         upgrade_attribute = list(player.stats.keys())[self.index]
         upgrade_cost = player.upgrade_cost[upgrade_attribute]
         current_stat = player.stats[upgrade_attribute]
         stat_max = player.max_stats[upgrade_attribute] 
+        print(stat_max)
         if player.exp >= upgrade_cost and current_stat < stat_max:
             # decrease exp
             player.exp -= player.upgrade_cost[upgrade_attribute]
@@ -84,6 +86,7 @@ class UpgradeMenuItem():
                 player.energy =  player.stats['energy']
 
     def display(self, surface, selection_num, name, value, max_value, cost):
+        """Display Items on screen"""
         if self.index == selection_num:
             pygame.draw.rect(surface,settings.UPGRADE_BG_COLOR_SELECTED, self.rect)
             pygame.draw.rect(surface,settings.UI_BORDER_COLOR, self.rect, 4)

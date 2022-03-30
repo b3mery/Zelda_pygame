@@ -15,6 +15,7 @@ HITBOX_OFFSET = {
 NBR_OF_LEVELS = 5
 LEVEL_INCREASE_PERCENT = 0.10
 
+MAIN_AUDIO_FILE = 'assets/audio/main.ogg'
 
 ############################################### Display #######################################################################
 # UI

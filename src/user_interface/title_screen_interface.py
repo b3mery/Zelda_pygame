@@ -4,7 +4,8 @@ from src.user_interface.base.title_menu_base import TitleMenuInterfaceBase
 from src.utils import settings
 
 class TitleScreenInterface(TitleMenuInterfaceBase):
-    """_summary_
+    """Title Screen Interface responsible for Play or Quit interactions
+    Extends: TitleMenuInterfaceBase
     """
     def __init__(self, activate_level) -> None:
         super().__init__()

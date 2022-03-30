@@ -4,7 +4,7 @@ from src.user_interface.base.menu_base import MenuBase
 from src.utils import settings
 
 class TitleMenuInterfaceBase(MenuBase):
-    """_summary_
+    """Base Class for Drawinging Title and Options to the game screen
     """
     def __init__(self) -> None:
         super().__init__()
@@ -29,7 +29,7 @@ class TitleMenuInterfaceBase(MenuBase):
         self.display_surface.blit(title_surf, title_rect)
 
     def create_menu_items(self):
-        """_summary_
+        """Create item (buttons) from self.item list
         """
         self.item_list = []
 

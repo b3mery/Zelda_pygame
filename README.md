@@ -4,7 +4,7 @@
 * Game was developed as part of [Clear Code Youtube Tutorial](https://www.youtube.com/watch?v=QU1pPzEGrqw&list=PLGUFtX0WQvIfc_tREtSfYcQpDju0YMg93&index=6&t=2678s&ab_channel=ClearCode). 
 
 </img>
-<img src = "docs/demo.gif", alt = "wordle", height = "350">
+<img src = "docs/demo.gif", alt = "zelda demo", height = "350">
 
 The code mostly follows the tutorial, however I did put my own flavour on it, such as:
   * Refactored methods to reduce code complexity, and follow clean code principles.

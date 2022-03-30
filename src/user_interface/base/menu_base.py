@@ -18,7 +18,7 @@ class MenuBase:
         self.selection_cooldown_duration = 300
 
     def input(self):
-        """_summary_
+        """Keyboard input 
         """
         keys = pygame.key.get_pressed()
         if not self.can_move:
@@ -41,14 +41,16 @@ class MenuBase:
 
 
     def cooldowns(self):
-        """_summary_
+        """Keyboard selection cooldown method
         """
         current_time = pygame.time.get_ticks()
         if not self.can_move and current_time - self.selection_time >= self.selection_cooldown_duration:
             self.can_move = True
 
     def trigger(self):
-        """Override Method"""
+        """Override Method
+        Used to select an item
+        """
         print(f"Selected item index: {self.selection_index}, attribute: {self.attribute_names[self.selection_index]}. If your're seeing this, methodd needs to be overridden")
 
 

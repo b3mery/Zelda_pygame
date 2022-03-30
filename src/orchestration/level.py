@@ -1,8 +1,5 @@
 import pygame
 import random
-from src.user_interface.game_over_interface import GameOverInterface
-from src.user_interface.title_screen_interface import TitleScreenInterface
-from src.user_interface.level_complete_interface import LevelCompleteInterface
 
 from src.utils import settings
 from src.utils import util
@@ -14,8 +11,12 @@ from src.game_objects.player import Player
 from src.game_objects.enemy import Enemy
 
 from src.animation.animation_player import AnimationPlayer
+
 from src.user_interface.heads_up_display import HeadsUpDisplay
 from src.user_interface.upgrade_menu import UpgradeMenu
+from src.user_interface.game_over_interface import GameOverInterface
+from src.user_interface.title_screen_interface import TitleScreenInterface
+from src.user_interface.level_complete_interface import LevelCompleteInterface
 from src.orchestration.y_sort_camera_group import YSortCameraGroup
 
 class Level:
@@ -37,15 +38,16 @@ class Level:
         self.level_nbr = 1
         self.max_nbr_levels = settings.NBR_OF_LEVELS
         self.is_level_complete = False
-        self.rebuild_player = True
+        self.new_player = True
+        self.player:Player = None
         self.is_game_running = False
-        self.is_game_paused = False
+        self.is_upgrade_menu_active = False
         self.is_game_over = False
         
         # main sound
-        self.main_sound = pygame.mixer.Sound(open('assets/audio/main.ogg'))
+        self.main_sound = pygame.mixer.Sound(open(settings.MAIN_AUDIO_FILE))
         self.main_sound.set_volume(0.5)
-        self.main_sound.play(loops=1)
+        self.main_sound.play(loops=-1)
 
         # Sprite group setup
         self.visible_sprites = YSortCameraGroup()
@@ -58,7 +60,6 @@ class Level:
         # sprite setup
         # Creates monsters, tiles and player
         self.__create_level_map()
-
 
         self.current_attack = None
         # particles
@@ -88,8 +89,8 @@ class Level:
             'entities': util.import_csv_layout("assets/map/map_Entities.csv"),
         }
         graphics = {
-            'grass': util.import_folder("assets/graphics/Grass"),
-            'objects': util.import_folder("assets/graphics/objects")
+            'grass': util.import_folder_images("assets/graphics/Grass"),
+            'objects': util.import_folder_images("assets/graphics/objects")
         }
         for style, layout in layouts.items():
             for row_index, row in enumerate(layout):
@@ -139,16 +140,26 @@ class Level:
             id (str): Id form the tiled csv layour
             pos (tuple): X and Y position
         """
-        if id == "394" and self.rebuild_player: # player 
-            self.rebuild_player = False
-            self.player = Player(
-                    pos,
-                    [self.visible_sprites, self.attackable_sprites],
-                    self.obstacle_sprites,
-                    self.create_attack,
-                    self.destroy_attack,
-                    self.create_magic
-                )
+        if id == "394": # player 
+            if self.player and not self.new_player:
+                # Store progress
+                stats = self.player.stats
+                health = self.player.health
+                energy = self.player.energy
+                exp = self.player.exp
+                # Kill and create
+                self.player.kill()
+                self.__create_player(pos)
+                # repopulate progress
+                self.player.stats = stats
+                self.player.health = health
+                self.player.energy = energy
+                self.player.exp = exp
+            else:
+                self.__create_player(pos)
+            # re initalise upgrade menu
+            self.upgrade_menu = UpgradeMenu(self.player)
+
         else:
             monster_name = settings.monster_id_mapping.get(id)
             if monster_name is not None:
@@ -162,7 +173,15 @@ class Level:
                     self.trigger_death_particles,
                     self.add_xp
                 )
-
+    def __create_player(self, pos:tuple):
+        self.player = Player(
+            pos,
+            [self.visible_sprites, self.attackable_sprites],
+            self.obstacle_sprites,
+            self.create_attack,
+            self.destroy_attack,
+            self.create_magic
+        )
 
     ####################################### Player Integration Methods #############################################################                         
     def create_attack(self):
@@ -257,7 +276,7 @@ class Level:
     def toggle_upgrade_menu(self):
         """Pause the game
         """
-        self.is_game_paused = not self.is_game_paused
+        self.is_upgrade_menu_active = not self.is_upgrade_menu_active
 
     def check_game_over(self):
         """Pause the game
@@ -280,7 +299,7 @@ class Level:
     def rebuild_level(self):
         """Kill all sprites, rebuild
         """
-        self.rebuild_player = self.player.health <= 0
+        self.new_player = self.player.health <= 0
 
         for sprite in self.visible_sprites:
             if sprite.sprite_type != 'player':
@@ -294,11 +313,11 @@ class Level:
         for sprite in self.attackable_sprites:
             if sprite.sprite_type != 'player':
                 sprite.kill()
-        if self.rebuild_player:
+        if self.new_player:
             self.player.kill()        
         
         self.__create_level_map()
-        self.main_sound.play(loops=1)
+        self.main_sound.play(loops=-1)
         self.is_game_over = False
         self.is_level_complete = False    
 
@@ -307,7 +326,7 @@ class Level:
         """Update and draw the sprites to the game
         """ 
         self.visible_sprites.custom_draw(self.player)
-        self.heads_up_display.display(self.player)
+        self.heads_up_display.display(self.player, self.level_nbr)
         if not self.is_game_running:
             # Title Screen
             self.title_screen_ui.display()
@@ -317,7 +336,7 @@ class Level:
             # Game Over 
             self.main_sound.stop()
             self.game_over_display.display()
-        elif self.is_game_paused:
+        elif self.is_upgrade_menu_active:
             # Upgrade screen
             self.upgrade_menu.display()
         else:

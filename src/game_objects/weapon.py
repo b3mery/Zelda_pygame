@@ -3,10 +3,10 @@ import pygame
 from src.game_objects.player import Player
 
 class Weapon(pygame.sprite.Sprite):
-    """_summary_
+    """Weapon class for creating and animating weapon
 
-    Args:
-        pygame (_type_): _description_
+    Extends:
+        pygame (pygame.sprite.Sprite)
     """
     def __init__(self, groups, player:Player) -> None:
         super().__init__(groups)

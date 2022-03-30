@@ -77,7 +77,7 @@ class Enemy(Entity):
         self.animations = {'idle': [], 'move': [], 'attack': [] }
         main_path = f'assets/graphics/monsters/{monster_name}/'
         for anamation in self.animations.keys(): 
-            self.animations[anamation] = util.import_folder(main_path + anamation)
+            self.animations[anamation] = util.import_folder_images(main_path + anamation)
     
     def __get_player_distance_direction(self,player:Player):
         """Apply vector maths on Enemy Vector and Player Vector to calculate

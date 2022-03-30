@@ -1,10 +1,10 @@
 import pygame
 
 class ParticleEffect(pygame.sprite.Sprite):
-    """_summary_
+    """Animate Particle Effects
 
-    Args:
-        pygame (_type_): _description_
+    Extends:
+        pygame (pygame.sprite.Sprite)
     """
     def __init__(self, pos, animation_frames, groups) -> None:
         super().__init__(groups)
@@ -17,7 +17,8 @@ class ParticleEffect(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center = pos)
     
     def animate(self):
-        """_summary_
+        """update self.image to match current frame
+        kill is out of range i.e. list has been interated completely.
         """
         self.frame_index += self.anamation_speed
         if self.frame_index >= len(self.frames):

@@ -19,14 +19,14 @@ def import_csv_layout(path):
         terrain_map = [list(row) for row in layout]
     return terrain_map
 
-def import_folder(path):
-    """_summary_
+def import_folder_images(path):
+    """Import all items 
 
     Args:
-        path (_type_): _description_
+        path (str): directory path
 
     Returns:
-        _type_: _description_
+        list: list of pygame images
     """
     surface_list = []
     for _, __,img_files in os.walk(path):

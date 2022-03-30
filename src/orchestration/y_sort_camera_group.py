@@ -36,10 +36,10 @@ class YSortCameraGroup(pygame.sprite.Group):
             self.display_surface.blit(sprite.image, offset_pos)
     
     def enemy_update(self, player:Player):
-        """_summary_
+        """Update Enemy Sprites
 
         Args:
-            player (Player): _description_
+            player (Player): Insatiated Player Object
         """
         enemy_sprites = [sprite for sprite in self.sprites() if hasattr(sprite, 'sprite_type') and sprite.sprite_type == 'enemy']
         for enemy in enemy_sprites:

@@ -1,10 +1,12 @@
-import pygame, sys
+import pygame
+import sys
+
 from src.utils import settings
 from src.orchestration.level import Level
 from src.utils import keyboard_control_settings as input
     
 class Game:
-    """Game Class"""
+    """Main Game Class"""
     def __init__(self) -> None:
         # General Setup
         pygame.init()
@@ -23,9 +25,8 @@ class Game:
                     pygame.quit()
                     sys.exit() 
                 # Toogle Menu    
-                if event.type == pygame.KEYDOWN:
-                    if event.key == input.MENU:
-                        self.level.toggle_upgrade_menu()
+                if event.type == pygame.KEYDOWN and event.key == input.MENU:
+                    self.level.toggle_upgrade_menu()
                               
             self.screen.fill(settings.WATER_COLOR)
             self.level.run()

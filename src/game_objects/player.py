@@ -86,7 +86,7 @@ class Player(Entity):
         self.animations =settings.player_animations
         for animation_state in self.animations.keys():
             folder_path = f"{character_path}/{animation_state}"
-            self.animations[animation_state] = util.import_folder(folder_path)
+            self.animations[animation_state] = util.import_folder_images(folder_path)
 
     def __check_for_input(self):
         """Check for keyboard input"""
@@ -210,7 +210,7 @@ class Player(Entity):
                 self.status = self.status.replace('_attack', '')
 
     def __cooldowns(self):
-        """_summary_
+        """Method for tracking player cooldowns
         """
         current_time = pygame.time.get_ticks()
         
@@ -253,20 +253,18 @@ class Player(Entity):
             self.image.set_alpha(255)
 
     def get_full_weapon_damage(self):
-        """_summary_
-
+        """
         Returns:
-            _type_: _description_
+            float: sum of base damage + assigned weapon strength 
         """
         base_damage  = self.stats['attack']
         weapon_damage = settings.weapon_data[self.weapon]['damage']
         return base_damage + weapon_damage
 
     def get_full_magic_damage(self):
-        """_summary_
-
+        """
         Returns:
-            _type_: _description_
+            float: sum of base damage + assigned magic strength 
         """
         base_damage  = self.stats['attack']
         spell_damage = settings.magic_data[self.magic]['strength']
@@ -279,7 +277,7 @@ class Player(Entity):
         return list(self.upgrade_cost.values())[index]
 
     def __energy_recovery(self):
-        """_summary_
+        """Recovery then player energy by x amount over time
         """
         max_energy = self.stats['energy']
         if self.energy < max_energy:

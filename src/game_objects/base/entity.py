@@ -53,7 +53,7 @@ class Entity(pygame.sprite.Sprite):
                     self.hitbox.top = sprite.hitbox.bottom
     
     def hit_reaction(self):
-        """Move the enemy back if they have been hit
+        """Move the entity back if they have been hit
         """
         if not self.vulnerable:
             self.direction *=  -self.resistance
