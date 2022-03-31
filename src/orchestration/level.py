@@ -291,7 +291,6 @@ class Level:
 
         if len(self.enemy_sprites) == 0 and self.level_nbr < self.max_nbr_levels:
             self.is_level_complete = True
-            self.level_nbr += 1
 
     def activate_level(self):
         self.is_game_running = True
@@ -300,7 +299,7 @@ class Level:
         """Kill all sprites, rebuild
         """
         self.new_player = self.player.health <= 0
-
+        # clear sprites
         for sprite in self.visible_sprites:
             if sprite.sprite_type != 'player':
                 sprite.kill()
@@ -315,9 +314,15 @@ class Level:
                 sprite.kill()
         if self.new_player:
             self.player.kill()        
+            self.level_nbr = 1
+
+        if self.is_level_complete:
+            # increase level after level complete rebuild
+            self.level_nbr += 1    
         
         self.__create_level_map()
         self.main_sound.play(loops=-1)
+
         self.is_game_over = False
         self.is_level_complete = False    
 
