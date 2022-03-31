@@ -23,16 +23,15 @@ Sections I implemmented not in the tutorial:
     * Display 'Game Over' or 'You Won' deppending on the outcome
     * Options to 'Try Again' or 'Quit'
 
-All game assets are stored in the "assets" folder and were sourced from [Clear Code Projects](https://github.com/clear-code-projects/Zelda) under a Creative Commons Zero (CC0) license.
-
 ## Running The Game
 -------------------
-* The entry point to the game is main.py in the src folder. to run the file have src as your current working directory as the imports are relative.
+* The entry point to the game is main.py in the src folder. To run the file have src as your current working directory as the asset imports are relative.
   * The rest of the code is organsied into sub modules, for better organsation and grouping of like functions and objects. 
-* All the game assets (audio, graphics, game layout files) are loaded in the assets folder.
+* All the game assets (audio, graphics, game layout files) are in the assets folder.
+  * The names of sub folders in assets are used as keys for animations and audio. For example, graphics/monsters/spirit/idle coresponds to the name dictionary key of the monstor and its idle status. 
 
 ## Game Play Overview
-
+----------------------
 ### Title Screen
 </img>
 <img src = "docs/title_screen.png", alt = "title screen image", height = "350">
