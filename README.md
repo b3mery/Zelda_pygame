@@ -7,6 +7,7 @@
 <img src = "docs/demo.gif", alt = "zelda demo", height = "350">
 
 ## About 
+--------
 The code mostly follows the tutorial, however I did put my own flavour on it, such as:
   * Refactored methods to reduce code complexity, and follow clean code principles.
   * Refactored code structure, modulizing for a more organsied development.
@@ -25,6 +26,7 @@ Sections I implemmented not in the tutorial:
 All game assets are stored in the "assets" folder and were sourced from [Clear Code Projects](https://github.com/clear-code-projects/Zelda) under a Creative Commons Zero (CC0) license.
 
 ## Running The Game
+-------------------
 * The entry point to the game is main.py in the src folder. to run the file have src as your current working directory as the imports are relative.
   * The rest of the code is organsied into sub modules, for better organsation and grouping of like functions and objects. 
 * All the game assets (audio, graphics, game layout files) are loaded in the assets folder.
@@ -54,4 +56,4 @@ All game assets are stored in the "assets" folder and were sourced from [Clear C
 # References
   * [YouTube Tutorial](https://www.youtube.com/watch?v=QU1pPzEGrqw&list=PLGUFtX0WQvIfc_tREtSfYcQpDju0YMg93&index=6&t=2678s&ab_channel=ClearCode)
   * [Starting Files](https://github.com/clear-code-projects/Zelda)
-  * [Art assets and the soundtrack have been done by Pixel-boy and AAA](https://pixel-boy.itch.io/ninja-adventure-asset-pack)
+  * [Art assets and the soundtrack - Pixel-boy and AAA](https://pixel-boy.itch.io/ninja-adventure-asset-pack)
