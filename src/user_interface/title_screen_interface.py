@@ -1,7 +1,7 @@
 import pygame, sys
-from src.user_interface.base.title_menu_base import TitleMenuInterfaceBase
+from user_interface.base.title_menu_base import TitleMenuInterfaceBase
 
-from src.utils import settings
+from utils import settings
 
 class TitleScreenInterface(TitleMenuInterfaceBase):
     """Title Screen Interface responsible for Play or Quit interactions

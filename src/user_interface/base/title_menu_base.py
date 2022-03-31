@@ -1,7 +1,7 @@
 import pygame
-from src.user_interface.base.menu_base import MenuBase 
+from user_interface.base.menu_base import MenuBase 
 
-from src.utils import settings
+from utils import settings
 
 class TitleMenuInterfaceBase(MenuBase):
     """Base Class for Drawinging Title and Options to the game screen

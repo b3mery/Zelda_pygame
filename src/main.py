@@ -1,9 +1,9 @@
 import pygame
 import sys
 
-from src.utils import settings
-from src.orchestration.level import Level
-from src.utils import keyboard_control_settings as input
+from utils import settings
+from orchestration.level import Level
+from utils import keyboard_control_settings as input
     
 class Game:
     """Main Game Class"""

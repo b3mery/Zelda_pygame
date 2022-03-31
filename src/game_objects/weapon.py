@@ -1,6 +1,5 @@
-from tkinter import CENTER
 import pygame
-from src.game_objects.player import Player
+from game_objects.player import Player
 
 class Weapon(pygame.sprite.Sprite):
     """Weapon class for creating and animating weapon

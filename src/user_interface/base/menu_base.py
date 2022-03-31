@@ -1,7 +1,7 @@
 import pygame 
 
-from src.utils import settings
-from src.utils import keyboard_control_settings as input
+from utils import settings
+from utils import keyboard_control_settings as input
 class MenuBase:
     """Base Menu UI Class for keyboard selection 
     """

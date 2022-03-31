@@ -1,23 +1,23 @@
 import pygame
 import random
 
-from src.utils import settings
-from src.utils import util
+from utils import settings
+from utils import util
 
-from src.game_objects.base.tile import Tile
-from src.game_objects.weapon import Weapon
-from src.game_objects.magic import Magic
-from src.game_objects.player import Player
-from src.game_objects.enemy import Enemy
+from game_objects.base.tile import Tile
+from game_objects.weapon import Weapon
+from game_objects.magic import Magic
+from game_objects.player import Player
+from game_objects.enemy import Enemy
 
-from src.animation.animation_player import AnimationPlayer
+from animation.animation_player import AnimationPlayer
 
-from src.user_interface.heads_up_display import HeadsUpDisplay
-from src.user_interface.upgrade_menu import UpgradeMenu
-from src.user_interface.game_over_interface import GameOverInterface
-from src.user_interface.title_screen_interface import TitleScreenInterface
-from src.user_interface.level_complete_interface import LevelCompleteInterface
-from src.orchestration.y_sort_camera_group import YSortCameraGroup
+from user_interface.heads_up_display import HeadsUpDisplay
+from user_interface.upgrade_menu import UpgradeMenu
+from user_interface.game_over_interface import GameOverInterface
+from user_interface.title_screen_interface import TitleScreenInterface
+from user_interface.level_complete_interface import LevelCompleteInterface
+from orchestration.y_sort_camera_group import YSortCameraGroup
 
 class Level:
     """* Level Class is essentially the game engine, it is responsible for:

@@ -1,10 +1,10 @@
 from pyclbr import Function
 import pygame
 
-from src.game_objects.base.entity import Entity 
-from src.utils import settings
-from src.utils import util
-from src.utils import keyboard_control_settings as input
+from game_objects.base.entity import Entity 
+from utils import settings
+from utils import util
+from utils import keyboard_control_settings as input
 
 class Player(Entity):
     """Player Game Object Class

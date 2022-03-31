@@ -1,6 +1,6 @@
 import pygame
-from src.game_objects.player import Player
-from src.utils import settings
+from game_objects.player import Player
+from utils import settings
 
 class HeadsUpDisplay:
     """User Interface Heads up Display

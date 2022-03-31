@@ -1,8 +1,8 @@
 import pygame
 import random
 
-from src.utils import util
-from src.animation.particle_effect import ParticleEffect
+from utils import util
+from animation.particle_effect import ParticleEffect
 
 class AnimationPlayer:
 	"""Animation Particle Player.

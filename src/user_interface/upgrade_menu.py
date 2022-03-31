@@ -1,9 +1,9 @@
 import pygame 
 
-from src.game_objects.player import Player
-from src.user_interface.base.menu_base import MenuBase
-from src.user_interface.base.upgrade_menu_item import UpgradeMenuItem
-from src.utils import settings
+from game_objects.player import Player
+from user_interface.base.menu_base import MenuBase
+from user_interface.base.upgrade_menu_item import UpgradeMenuItem
+from utils import settings
 
 class UpgradeMenu(MenuBase):
     """Play Stats Upgrade Menu Interface

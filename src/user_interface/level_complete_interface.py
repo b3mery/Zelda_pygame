@@ -1,7 +1,7 @@
 import pygame, sys
-from src.user_interface.base.title_menu_base import TitleMenuInterfaceBase
+from user_interface.base.title_menu_base import TitleMenuInterfaceBase
 
-from src.utils import settings
+from utils import settings
 
 class LevelCompleteInterface(TitleMenuInterfaceBase):
     """Level Complete Interface. Responsible for Continue or Quit interactions.

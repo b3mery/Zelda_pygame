@@ -1,5 +1,5 @@
 import pygame
-from src.game_objects.player import Player
+from game_objects.player import Player
 
 class YSortCameraGroup(pygame.sprite.Group):
     """Custom Sprite Group for Camera and Overlap

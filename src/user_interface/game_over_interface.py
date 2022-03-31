@@ -1,6 +1,6 @@
 import pygame, sys
-from src.user_interface.base.title_menu_base import TitleMenuInterfaceBase
-from src.utils import settings
+from user_interface.base.title_menu_base import TitleMenuInterfaceBase
+from utils import settings
 
 class GameOverInterface(TitleMenuInterfaceBase):
     """Game Over user interface for restarting or quitting the game

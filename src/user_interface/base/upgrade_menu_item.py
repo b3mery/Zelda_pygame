@@ -1,6 +1,6 @@
 import pygame
-from src.utils import settings
-from src.game_objects.player import Player
+from utils import settings
+from game_objects.player import Player
 
 class UpgradeMenuItem():
     """Base Menu Item for each Stat Item

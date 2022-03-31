@@ -1,10 +1,10 @@
 import pygame
 import random
 
-from src.animation.animation_player import AnimationPlayer
-from src.game_objects.player import Player
+from animation.animation_player import AnimationPlayer
+from game_objects.player import Player
 
-from src.utils import settings
+from utils import settings
 
 class Magic:
     """Generate Plaer Magic

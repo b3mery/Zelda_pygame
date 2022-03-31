@@ -1,10 +1,10 @@
 from pyclbr import Function
 import pygame
 
-from src.utils import settings 
-from src.utils import util
-from src.game_objects.player import Player
-from src.game_objects.base.entity import Entity
+from utils import settings 
+from utils import util
+from game_objects.player import Player
+from game_objects.base.entity import Entity
 
 
 class Enemy(Entity):
