@@ -4,7 +4,6 @@ import pygame
 from game_objects.base.entity import Entity 
 from utils import settings
 from utils import util
-from utils import keyboard_control_settings as input
 
 class Player(Entity):
     """Player Game Object Class
@@ -106,20 +105,20 @@ class Player(Entity):
         """
         keys = pygame.key.get_pressed()
         # Vertical Inputs
-        if keys[input.UP]:
+        if keys[settings.UP]:
             self.direction.y = -1
             self.status = 'up'
-        elif keys[input.DOWN]:
+        elif keys[settings.DOWN]:
             self.direction.y = 1
             self.status = 'down'
         else:
             self.direction.y = 0
 
         # Horizontal Inputs
-        if keys[input.RIGHT]:
+        if keys[settings.RIGHT]:
             self.direction.x = 1
             self.status = 'right'
-        elif keys[input.LEFT]:
+        elif keys[settings.LEFT]:
             self.direction.x = -1
             self.status = 'left'
         else:
@@ -132,7 +131,7 @@ class Player(Entity):
         """
         keys = pygame.key.get_pressed()
         # Attack Input:
-        if keys[input.ATTACK]:
+        if keys[settings.ATTACK]:
             self.is_attacking = True
             self.attack_time = pygame.time.get_ticks()
             self.create_attack()
@@ -146,7 +145,7 @@ class Player(Entity):
         """
         keys = pygame.key.get_pressed()
         # Switch Weapon        
-        if keys[input.SWAP_WEAPON] and self.can_switch_weapon:
+        if keys[settings.SWAP_WEAPON] and self.can_switch_weapon:
             # q to change weapon
             self.can_switch_weapon = False
             self.weapon_switch_time = pygame.time.get_ticks()
@@ -163,7 +162,7 @@ class Player(Entity):
         """
         keys = pygame.key.get_pressed()
         # Magic Input
-        if keys[input.MAGIC]:
+        if keys[settings.MAGIC]:
             self.is_attacking = True
             self.attack_time = pygame.time.get_ticks()
             style = list(settings.magic_data.keys())[self.magic_index]
@@ -179,7 +178,7 @@ class Player(Entity):
         """       
         keys = pygame.key.get_pressed()
         # Switch Magic
-        if keys[input.SWAP_MAGIC] and self.can_switch_magic:
+        if keys[settings.SWAP_MAGIC] and self.can_switch_magic:
             # e to change magic
             self.can_switch_magic = False
             self.magic_switch_time = pygame.time.get_ticks()

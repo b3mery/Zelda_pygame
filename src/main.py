@@ -3,7 +3,6 @@ import sys
 
 from utils import settings
 from orchestration.level import Level
-from utils import keyboard_control_settings as input
     
 class Game:
     """Main Game Class"""
@@ -25,7 +24,7 @@ class Game:
                     pygame.quit()
                     sys.exit() 
                 # Toogle Menu    
-                if event.type == pygame.KEYDOWN and event.key == input.MENU:
+                if event.type == pygame.KEYDOWN and event.key == settings.MENU:
                     self.level.toggle_upgrade_menu()
                               
             self.screen.fill(settings.WATER_COLOR)

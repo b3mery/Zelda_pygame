@@ -1,6 +1,7 @@
+import pygame
 GAME_TITLE = 'Zelda: A Link To The Py'
 
-# game setup
+############################################### Game Setup #####################################################################
 WIDTH    = 1280
 HEIGHT   = 720
 FPS      = 60
@@ -16,6 +17,22 @@ NBR_OF_LEVELS = 5
 LEVEL_INCREASE_PERCENT = 0.10
 
 MAIN_AUDIO_FILE = 'assets/audio/main.ogg'
+
+############################################### Keyboard Input ################################################################
+UP = pygame.K_UP
+DOWN = pygame.K_DOWN
+LEFT = pygame.K_LEFT
+RIGHT = pygame.K_RIGHT
+
+OK = pygame.K_RALT 
+
+ATTACK = pygame.K_SPACE
+MAGIC = pygame.K_LALT
+
+MENU = pygame.K_m
+
+SWAP_WEAPON = pygame.K_LCTRL
+SWAP_MAGIC = pygame.K_LSHIFT
 
 ############################################### Display #######################################################################
 # UI
