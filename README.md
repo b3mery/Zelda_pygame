@@ -7,7 +7,7 @@
 <img src = "docs/demo.gif", alt = "zelda demo", height = "350">
 
 ## About 
---------
+
 The code mostly follows the tutorial, however I did put my own flavour on it, such as:
   * Refactored methods to reduce code complexity, and follow clean code principles.
   * Refactored code structure, modulizing for a more organsied development.
@@ -24,14 +24,15 @@ Sections I implemmented not in the tutorial:
     * Options to 'Try Again' or 'Quit'
 
 ## Running The Game
--------------------
-* The entry point to the game is main.py in the src folder. To run the file have src as your current working directory as the asset imports are relative.
+* The entry point to the game is main.py in the src folder.
+  * To run the game have src as your current working directory as the asset imports are relative.
+  * Keyboard controls are stored in the settings module located in src/utils/settings.py. Update them if you like. 
   * The rest of the code is organsied into sub modules, for better organsation and grouping of like functions and objects. 
 * All the game assets (audio, graphics, game layout files) are in the assets folder.
   * The names of sub folders in assets are used as keys for animations and audio. For example, graphics/monsters/spirit/idle coresponds to the name dictionary key of the monstor and its idle status. 
 
 ## Game Play Overview
-----------------------
+
 ### Title Screen
 </img>
 <img src = "docs/title_screen.png", alt = "title screen image", height = "350">
